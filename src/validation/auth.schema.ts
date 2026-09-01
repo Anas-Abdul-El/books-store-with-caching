@@ -5,8 +5,8 @@ const authSchema = z.object({
     password: z.string().min(6).max(100),
 });
 
-type AuthSchema = z.infer<typeof authSchema>;
+type AuthSchemaType = z.infer<typeof authSchema>;
 
-export type { AuthSchema };
+export type { AuthSchemaType };
 
 export { authSchema };

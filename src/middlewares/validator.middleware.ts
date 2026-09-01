@@ -1,18 +1,25 @@
 import type { NextFunction, Request, Response } from "express";
-import type { ZodSchema } from "zod/v3";
+import type zod from "zod";
 
-const validatorMiddleware = (schema: ZodSchema, location: "body" | "query" | "params" | "cookies" = "body") => {
+const validatorMiddleware = (schema: zod.ZodObject, location: "body" | "query" | "params" | "cookies" = "body") => {
     return (req: Request, res: Response, next: NextFunction) => {
         const reqBody = req[location];
-        const result = schema.safeParse(reqBody);
+        const { error, data } = schema.safeParse(reqBody);
 
-        if (!result.success) {
-            const errorMessages = result.error.errors.map(err => err.message);
+        if (error) {
             // TODO : send error messages to custom error class
-            return next(errorMessages);
+            return next(error);
         }
 
-        req[location] = result.data;
+        // TODO : send error messages to custom error class
+        if (data === undefined) {
+            return res.status(400).send({
+                status: "fail",
+                message: "Invalid request data",
+            });
+        }
+
+        req[location] = data;
         next();
     };
 };
