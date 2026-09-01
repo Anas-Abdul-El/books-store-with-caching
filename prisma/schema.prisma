@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  userId    String @id @default(uuid())
+  firstName  String
+  lastName String
+  email String @unique
+  password String
+  createdAt DateTime @default(now())
+  isVerified Boolean @default(false)
+  isActive Boolean @default(true)
+  verificationCode String
+  resetPasswordCode String
+
+  session Session[]
+
+  cart Cart?
+
+  order Order?
+
+  @@index([email, isVerified])
+}
+
+model Session {
+  sessionId Int @id @default(autoincrement())
+  refreshToken String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  userId String 
+  user User @relation(references: [userId], fields: [userId])
+
+  @@index([refreshToken])
+}
+
+model Book {
+  bookId Int @id @default(autoincrement())
+  title String
+  releaseDate DateTime
+  description String?
+  price Float
+  stockCount Int
+
+  authorId Int 
+  author Author @relation(references: [authorId],fields: [authorId])
+
+  categoryId Int
+  category Category @relation(references: [categoryId],fields : [categoryId])
+
+  cartItem CartItem?
+
+  OrderItem OrderItem?
+
+  @@index([title, releaseDate])
+}
+
+model Author {
+  authorId Int @id @default(autoincrement())
+  name String
+  description String?
+
+  books Book[]
+
+  @@index([name])
+}
+
+model Category {
+  categoryId Int @id @default(autoincrement())
+  name String 
+  description String?
+
+  books Book[]
+
+  @@index([name])
+}
+
+model Cart {
+  cartId String @id @default(uuid())
+  quantity Int
+  price Float
+  
+  userId String @unique
+  user User @relation(references: [userId], fields: [userId], onDelete: Cascade)
+
+  cartItems CartItem[]
+}
+
+model CartItem {
+  cartItemId String @id @default(uuid())
+  quantity Int
+  price Float
+
+  cartId String
+  cart Cart @relation(references: [cartId], fields: [cartId])
+
+  bookId Int @unique
+  book Book @relation(references: [bookId], fields: [bookId])
+}
+
+model Order {
+  orderId String @id @default(uuid())
+  quantity Int
+  price Float
+  address String
+
+  userId String @unique
+  user User @relation(references: [userId], fields: [userId], onDelete: Cascade)
+
+  orderItems OrderItem[]
+}
+
+model OrderItem {
+  OrderItemId String @id @default(uuid())
+  quantity Int
+  price Float
+
+  orderId String
+  order Order @relation(references: [orderId], fields: [orderId])
+
+  bookId Int @unique
+  book Book @relation(references: [bookId], fields: [bookId])
+}
