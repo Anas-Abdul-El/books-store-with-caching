@@ -1,9 +1,12 @@
 import { Router } from "express";
+import { authController } from "../controllers";
+import { validatorMiddleware } from "../middlewares";
+import { authSchema } from "../validation/auth.schema";
 
 const userRouter: Router = Router();
 
 // login route
-userRouter.post("/login", (req, res) => {});
+userRouter.post("/login", validatorMiddleware(authSchema, "body"), authController.login);
 
 // register route
 
