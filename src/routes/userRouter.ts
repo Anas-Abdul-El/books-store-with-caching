@@ -3,10 +3,10 @@ import { authController } from "../controllers";
 import { validatorMiddleware } from "../middlewares";
 import { authSchema } from "../validation/auth.schema";
 
-const userRouter: Router = Router();
+const authRouter: Router = Router();
 
 // login route
-userRouter.post("/login", validatorMiddleware(authSchema, "body"), authController.userLogin);
+authRouter.post("/login", validatorMiddleware(authSchema, "body"), authController.userLogin);
 
 // register route
 
@@ -16,10 +16,4 @@ userRouter.post("/login", validatorMiddleware(authSchema, "body"), authControlle
 
 // verify account route
 
-// password reset route
-
-// get user profile route
-
-// update user profile route
-
-export default userRouter;
+export default authRouter;
