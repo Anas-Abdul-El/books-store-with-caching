@@ -7,27 +7,19 @@
 
 import type { NextFunction, Request, Response } from "express";
 import type zod from "zod";
+import AppError from "../utils/AppErr";
 
 const validatorMiddleware = (schema: zod.ZodObject, location: "body" | "query" | "params" | "cookies" = "body") => {
     return (req: Request, res: Response, next: NextFunction) => {
         const reqBody = req[location];
         const { error, data } = schema.safeParse(reqBody);
 
-        if (error) {
-            // TODO : send error messages to custom error class
-            return next(error);
-        }
+        if (error) return next(new AppError(error.message, 400));
 
-        // TODO : send error messages to custom error class
-        if (data === undefined) {
-            return res.status(400).send({
-                status: "fail",
-                message: "Invalid request data",
-            });
-        }
+        if (data === undefined) return next(new AppError("Invalid request data", 400));
 
         req[location] = data;
-        next();
+        return next();
     };
 };
 
