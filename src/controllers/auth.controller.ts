@@ -8,7 +8,12 @@
  */
 
 import type { NextFunction, Request, Response } from "express";
+import type { LoginRequestBody, LoginResponseBody } from "../types/auth";
 
-const userLogin = async (req: Request, res: Response, next: NextFunction) => {};
+const userLogin = async (
+    req: Request<{}, {}, LoginRequestBody, {}>,
+    res: Response<LoginResponseBody>,
+    next: NextFunction,
+) => {};
 
 export default { userLogin };
