@@ -6,7 +6,7 @@ import { authSchema } from "../validation/auth.schema";
 const userRouter: Router = Router();
 
 // login route
-userRouter.post("/login", validatorMiddleware(authSchema, "body"), authController.login);
+userRouter.post("/login", validatorMiddleware(authSchema, "body"), authController.userLogin);
 
 // register route
 
