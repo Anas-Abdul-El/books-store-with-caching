@@ -21,4 +21,22 @@ const getUserByEmail = async (email: string): Promise<User | null> => {
     });
 };
 
-export { getUserByEmail };
+/**
+ * saveSessionToken saves a new session token for a user in the database.
+ * It associates the token with the user's ID and sets an expiration date for the token.
+ * @param userId - The ID of the user for whom the session token is being saved.
+ * @param token - The session token to be saved in the database.
+ * @param expiresAt - The expiration date and time for the session token.
+ * @returns A Promise that resolves to the newly created session object containing the token and its expiration date.
+ */
+const saveSessionToken = async (userId: string, token: string, expiresAt: Date) => {
+    return await prisma.session.create({
+        data: {
+            userId,
+            refreshToken: token,
+            expiresAt,
+        },
+    });
+};
+
+export { getUserByEmail, saveSessionToken };

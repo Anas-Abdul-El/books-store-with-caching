@@ -8,10 +8,19 @@
  */
 
 import type { NextFunction, Request, Response } from "express";
+import { saveSessionToken } from "../repo/auth.repo";
 import { authService } from "../services";
 import type { LoginRequestBody, LoginResponseBody } from "../types/auth";
 import { generateToken } from "../utils/token";
 
+/**
+ * login handles the user login process.
+ * It receives the login data from the request body, calls the authentication service to authenticate the user,
+ * generates access and refresh tokens, and sends the appropriate response back to the client.
+ * @param req - The Express request object containing the login data.
+ * @param res - The Express response object used to send the response.
+ * @param next - The next middleware function in the Express pipeline for error handling.
+ */
 const userLogin = async (
     req: Request<{}, {}, LoginRequestBody, {}>,
     res: Response<LoginResponseBody>,
