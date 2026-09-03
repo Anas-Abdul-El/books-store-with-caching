@@ -7,6 +7,7 @@
 
 import type { User } from "../generated/prisma/browser";
 import { prisma } from "../libs/prisma";
+import type { RegisterSchemaType } from "../validation/auth.schema";
 
 /**
  * getUserByEmail retrieves a user from the database based on their email address.
@@ -39,4 +40,21 @@ const saveSessionToken = async (userId: string, token: string, expiresAt: Date) 
     });
 };
 
-export { getUserByEmail, saveSessionToken };
+type RegisteredUser = RegisterSchemaType;
+/**
+ * createUser creates a new user in the database with the provided user information.
+ * @param userInfo - An object containing the user's information, including name, email, password, and role.
+ * @returns A Promise that resolves to the newly created user object.
+ */
+const createUser = async (userInfo: RegisteredUser) => {
+    return await prisma.user.create({
+        data: {
+            email: userInfo.email,
+            password: userInfo.password,
+            firstName: userInfo.firstName,
+            lastName: userInfo.lastName,
+        },
+    });
+};
+
+export { createUser, getUserByEmail, saveSessionToken };

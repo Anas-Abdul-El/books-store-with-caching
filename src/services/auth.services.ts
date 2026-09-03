@@ -8,10 +8,10 @@
  */
 
 import type { User } from "../generated/prisma/browser";
-import { getUserByEmail } from "../repo/auth.repo";
+import { createUser, getUserByEmail } from "../repo/auth.repo";
 import AppError from "../utils/AppErr";
-import { compareHash } from "../utils/hash";
-import type { AuthSchemaType } from "../validation/auth.schema";
+import { compareHash, createHash } from "../utils/hash";
+import { type AuthSchemaType, type RegisterSchemaType } from "../validation/auth.schema";
 
 /**
  * loginUser handles the logic for logging in an existing user.
@@ -19,7 +19,7 @@ import type { AuthSchemaType } from "../validation/auth.schema";
  * @param data - The validated login data of type LoginSchemaType.
  * @returns A promise that resolves to the logged-in user's information.
  */
-export const loginUser = async (data: AuthSchemaType): Promise<Omit<User, "password">> => {
+const loginUser = async (data: AuthSchemaType): Promise<Omit<User, "password">> => {
     const { email, password: sentedPass } = data;
 
     const user = await getUserByEmail(email);
@@ -38,3 +38,26 @@ export const loginUser = async (data: AuthSchemaType): Promise<Omit<User, "passw
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
 };
+
+/**
+ * registerUser handles the logic for registering a new user.
+ * It takes the validated registration data as input and performs the necessary operations to create a new user in the database.
+ * @param data - The validated registration data of type RegisterSchemaType.
+ * @returns A promise that resolves to the created user's information.
+ */
+const registerUser = async (data: RegisterSchemaType): Promise<Omit<User, "password">> => {
+    const isUserExists = await getUserByEmail(data.email);
+
+    console.log(isUserExists);
+
+    if (isUserExists) throw new AppError("User already exists", 400);
+
+    const hashedPassword = await createHash(data.password);
+
+    const user = await createUser({ ...data, password: hashedPassword });
+
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+};
+
+export { loginUser, registerUser };

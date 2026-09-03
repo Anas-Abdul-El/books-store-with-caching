@@ -8,10 +8,12 @@
  */
 
 import type { NextFunction, Request, Response } from "express";
+import type { User } from "../generated/prisma/browser";
 import { saveSessionToken } from "../repo/auth.repo";
 import { authService } from "../services";
 import type { LoginRequestBody, LoginResponseBody } from "../types/auth";
 import { generateToken } from "../utils/token";
+import type { RegisterSchemaType } from "../validation/auth.schema";
 
 /**
  * login handles the user login process.
@@ -43,4 +45,21 @@ const userLogin = async (
     res.status(200).send({ accessToken, email: user.email, username: user.firstName });
 };
 
-export default { userLogin };
+/**
+ * register handles the user registration process.
+ * It receives the registration data from the request body, calls the authentication service to register the user,
+ * and sends the appropriate response back to the client.
+ * @param req - The Express request object containing the registration data.
+ * @param res - The Express response object used to send the response.
+ * @param next - The next middleware function in the Express pipeline for error handling.
+ */
+const register = async (
+    req: Request<{}, {}, RegisterSchemaType, {}>,
+    res: Response<Omit<User, "password">>,
+    next: NextFunction,
+) => {
+    const user = await authService.registerUser(req.body);
+    res.status(201).send(user);
+};
+
+export default { userLogin, register };

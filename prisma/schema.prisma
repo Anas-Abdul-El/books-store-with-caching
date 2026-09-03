@@ -21,8 +21,8 @@ model User {
   createdAt DateTime @default(now())
   isVerified Boolean @default(false)
   isActive Boolean @default(true)
-  verificationCode String
-  resetPasswordCode String
+  verificationCode String?
+  resetPasswordCode String?
 
   session Session[]
 
