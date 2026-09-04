@@ -8,7 +8,16 @@
  */
 
 import type { User } from "../generated/prisma/browser";
-import { createUser, deleteToken, getUserByEmail, getUserById } from "../repo/auth.repo";
+import transporter from "../libs/nodemailer";
+import {
+    createUser,
+    createVerificationCode,
+    deleteToken,
+    getUserByEmail,
+    getUserById,
+    getUserByVerificationToken,
+    updateUserVerificationStatus,
+} from "../repo/auth.repo";
 import AppError from "../utils/AppErr";
 import { compareHash, createHash } from "../utils/hash";
 import { generateToken, verifyToken } from "../utils/token";
@@ -102,6 +111,56 @@ const logout = async (userId: string) => {
     } catch (error) {
         throw new AppError("Failed to logout user", 500);
     }
+};
+
+/**
+ * sendVerificationEmail sends a verification email to the specified email address with a verification token.
+ * It constructs a verification URL using the provided token and sends an email with the verification link.
+ * @param email - The email address to send the verification email to.
+ * @param token - The verification token to include in the email.
+ * @returns A promise that resolves when the email is sent successfully.
+ */
+export const sendVerificationEmail = async (email: string, token: string) => {
+    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+
+    await createVerificationCode(email, token);
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Verify your email",
+        html: `<p>Please verify your email by clicking the link below:</p>
+           <a href="${verificationUrl}">Verify Email</a>`,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        throw new AppError("Failed to send verification email", 500);
+    }
+};
+
+/**
+ * verifyEmail handles the logic for verifying a user's email using a verification token.
+ * It retrieves the user associated with the provided token, checks if the token is valid and not expired,
+ * and updates the user's verification status accordingly.
+ * @param token - The verification token to verify the user's email.
+ * @returns A promise that resolves when the email verification process is complete.
+ */
+export const verifyEmail = async (token: string) => {
+    const isTokenValid = verifyToken(token, "verify");
+    if (!isTokenValid) throw new AppError("Invalid Token", 400);
+
+    const user = await getUserByVerificationToken(token);
+    if (!user) throw new AppError("Invalid or expired verification token", 400);
+
+    const now = new Date();
+    if (user.verificationCodeExpiresAt! > now) {
+        await updateUserVerificationStatus(user.userId, false);
+        throw new AppError("Invalid or expired verification token", 400);
+    }
+
+    await updateUserVerificationStatus(user.userId, true);
 };
 
 export { loginUser, logout, refreshAccessToken, registerUser };

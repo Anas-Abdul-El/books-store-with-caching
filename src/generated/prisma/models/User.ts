@@ -35,6 +35,8 @@ export type UserMinAggregateOutputType = {
   isActive: boolean | null
   verificationCode: string | null
   resetPasswordCode: string | null
+  verificationCodeExpiresAt: Date | null
+  resetPasswordCodeExpiresAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -48,6 +50,8 @@ export type UserMaxAggregateOutputType = {
   isActive: boolean | null
   verificationCode: string | null
   resetPasswordCode: string | null
+  verificationCodeExpiresAt: Date | null
+  resetPasswordCodeExpiresAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -61,6 +65,8 @@ export type UserCountAggregateOutputType = {
   isActive: number
   verificationCode: number
   resetPasswordCode: number
+  verificationCodeExpiresAt: number
+  resetPasswordCodeExpiresAt: number
   _all: number
 }
 
@@ -76,6 +82,8 @@ export type UserMinAggregateInputType = {
   isActive?: true
   verificationCode?: true
   resetPasswordCode?: true
+  verificationCodeExpiresAt?: true
+  resetPasswordCodeExpiresAt?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -89,6 +97,8 @@ export type UserMaxAggregateInputType = {
   isActive?: true
   verificationCode?: true
   resetPasswordCode?: true
+  verificationCodeExpiresAt?: true
+  resetPasswordCodeExpiresAt?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -102,6 +112,8 @@ export type UserCountAggregateInputType = {
   isActive?: true
   verificationCode?: true
   resetPasswordCode?: true
+  verificationCodeExpiresAt?: true
+  resetPasswordCodeExpiresAt?: true
   _all?: true
 }
 
@@ -188,6 +200,8 @@ export type UserGroupByOutputType = {
   isActive: boolean
   verificationCode: string | null
   resetPasswordCode: string | null
+  verificationCodeExpiresAt: Date | null
+  resetPasswordCodeExpiresAt: Date | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -222,6 +236,8 @@ export type UserWhereInput = {
   isActive?: Prisma.BoolFilter<"User"> | boolean
   verificationCode?: Prisma.StringNullableFilter<"User"> | string | null
   resetPasswordCode?: Prisma.StringNullableFilter<"User"> | string | null
+  verificationCodeExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
   cart?: Prisma.XOR<Prisma.CartNullableScalarRelationFilter, Prisma.CartWhereInput> | null
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
@@ -238,6 +254,8 @@ export type UserOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationCodeExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetPasswordCodeExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   session?: Prisma.SessionOrderByWithRelationInput
   cart?: Prisma.CartOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
@@ -257,6 +275,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"User"> | boolean
   verificationCode?: Prisma.StringNullableFilter<"User"> | string | null
   resetPasswordCode?: Prisma.StringNullableFilter<"User"> | string | null
+  verificationCodeExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
   cart?: Prisma.XOR<Prisma.CartNullableScalarRelationFilter, Prisma.CartWhereInput> | null
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
@@ -273,6 +293,8 @@ export type UserOrderByWithAggregationInput = {
   isActive?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationCodeExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetPasswordCodeExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -292,6 +314,8 @@ export type UserScalarWhereWithAggregatesInput = {
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   verificationCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   resetPasswordCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  verificationCodeExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
 }
 
 export type UserCreateInput = {
@@ -305,6 +329,8 @@ export type UserCreateInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
+  verificationCodeExpiresAt?: Date | string | null
+  resetPasswordCodeExpiresAt?: Date | string | null
   session?: Prisma.SessionCreateNestedOneWithoutUserInput
   cart?: Prisma.CartCreateNestedOneWithoutUserInput
   order?: Prisma.OrderCreateNestedOneWithoutUserInput
@@ -321,6 +347,8 @@ export type UserUncheckedCreateInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
+  verificationCodeExpiresAt?: Date | string | null
+  resetPasswordCodeExpiresAt?: Date | string | null
   session?: Prisma.SessionUncheckedCreateNestedOneWithoutUserInput
   cart?: Prisma.CartUncheckedCreateNestedOneWithoutUserInput
   order?: Prisma.OrderUncheckedCreateNestedOneWithoutUserInput
@@ -337,6 +365,8 @@ export type UserUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   session?: Prisma.SessionUpdateOneWithoutUserNestedInput
   cart?: Prisma.CartUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUpdateOneWithoutUserNestedInput
@@ -353,6 +383,8 @@ export type UserUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   session?: Prisma.SessionUncheckedUpdateOneWithoutUserNestedInput
   cart?: Prisma.CartUncheckedUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUncheckedUpdateOneWithoutUserNestedInput
@@ -369,6 +401,8 @@ export type UserCreateManyInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
+  verificationCodeExpiresAt?: Date | string | null
+  resetPasswordCodeExpiresAt?: Date | string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -382,6 +416,8 @@ export type UserUpdateManyMutationInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -395,6 +431,8 @@ export type UserUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -408,6 +446,8 @@ export type UserCountOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrder
+  verificationCodeExpiresAt?: Prisma.SortOrder
+  resetPasswordCodeExpiresAt?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -421,6 +461,8 @@ export type UserMaxOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrder
+  verificationCodeExpiresAt?: Prisma.SortOrder
+  resetPasswordCodeExpiresAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -434,6 +476,8 @@ export type UserMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrder
+  verificationCodeExpiresAt?: Prisma.SortOrder
+  resetPasswordCodeExpiresAt?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -455,6 +499,10 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type UserCreateNestedOneWithoutSessionInput = {
@@ -510,6 +558,8 @@ export type UserCreateWithoutSessionInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
+  verificationCodeExpiresAt?: Date | string | null
+  resetPasswordCodeExpiresAt?: Date | string | null
   cart?: Prisma.CartCreateNestedOneWithoutUserInput
   order?: Prisma.OrderCreateNestedOneWithoutUserInput
 }
@@ -525,6 +575,8 @@ export type UserUncheckedCreateWithoutSessionInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
+  verificationCodeExpiresAt?: Date | string | null
+  resetPasswordCodeExpiresAt?: Date | string | null
   cart?: Prisma.CartUncheckedCreateNestedOneWithoutUserInput
   order?: Prisma.OrderUncheckedCreateNestedOneWithoutUserInput
 }
@@ -556,6 +608,8 @@ export type UserUpdateWithoutSessionInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cart?: Prisma.CartUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUpdateOneWithoutUserNestedInput
 }
@@ -571,6 +625,8 @@ export type UserUncheckedUpdateWithoutSessionInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cart?: Prisma.CartUncheckedUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUncheckedUpdateOneWithoutUserNestedInput
 }
@@ -586,6 +642,8 @@ export type UserCreateWithoutCartInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
+  verificationCodeExpiresAt?: Date | string | null
+  resetPasswordCodeExpiresAt?: Date | string | null
   session?: Prisma.SessionCreateNestedOneWithoutUserInput
   order?: Prisma.OrderCreateNestedOneWithoutUserInput
 }
@@ -601,6 +659,8 @@ export type UserUncheckedCreateWithoutCartInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
+  verificationCodeExpiresAt?: Date | string | null
+  resetPasswordCodeExpiresAt?: Date | string | null
   session?: Prisma.SessionUncheckedCreateNestedOneWithoutUserInput
   order?: Prisma.OrderUncheckedCreateNestedOneWithoutUserInput
 }
@@ -632,6 +692,8 @@ export type UserUpdateWithoutCartInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   session?: Prisma.SessionUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUpdateOneWithoutUserNestedInput
 }
@@ -647,6 +709,8 @@ export type UserUncheckedUpdateWithoutCartInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   session?: Prisma.SessionUncheckedUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUncheckedUpdateOneWithoutUserNestedInput
 }
@@ -662,6 +726,8 @@ export type UserCreateWithoutOrderInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
+  verificationCodeExpiresAt?: Date | string | null
+  resetPasswordCodeExpiresAt?: Date | string | null
   session?: Prisma.SessionCreateNestedOneWithoutUserInput
   cart?: Prisma.CartCreateNestedOneWithoutUserInput
 }
@@ -677,6 +743,8 @@ export type UserUncheckedCreateWithoutOrderInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
+  verificationCodeExpiresAt?: Date | string | null
+  resetPasswordCodeExpiresAt?: Date | string | null
   session?: Prisma.SessionUncheckedCreateNestedOneWithoutUserInput
   cart?: Prisma.CartUncheckedCreateNestedOneWithoutUserInput
 }
@@ -708,6 +776,8 @@ export type UserUpdateWithoutOrderInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   session?: Prisma.SessionUpdateOneWithoutUserNestedInput
   cart?: Prisma.CartUpdateOneWithoutUserNestedInput
 }
@@ -723,6 +793,8 @@ export type UserUncheckedUpdateWithoutOrderInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetPasswordCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   session?: Prisma.SessionUncheckedUpdateOneWithoutUserNestedInput
   cart?: Prisma.CartUncheckedUpdateOneWithoutUserNestedInput
 }
@@ -740,6 +812,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isActive?: boolean
   verificationCode?: boolean
   resetPasswordCode?: boolean
+  verificationCodeExpiresAt?: boolean
+  resetPasswordCodeExpiresAt?: boolean
   session?: boolean | Prisma.User$sessionArgs<ExtArgs>
   cart?: boolean | Prisma.User$cartArgs<ExtArgs>
   order?: boolean | Prisma.User$orderArgs<ExtArgs>
@@ -756,6 +830,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isActive?: boolean
   verificationCode?: boolean
   resetPasswordCode?: boolean
+  verificationCodeExpiresAt?: boolean
+  resetPasswordCodeExpiresAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -769,6 +845,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isActive?: boolean
   verificationCode?: boolean
   resetPasswordCode?: boolean
+  verificationCodeExpiresAt?: boolean
+  resetPasswordCodeExpiresAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -782,9 +860,11 @@ export type UserSelectScalar = {
   isActive?: boolean
   verificationCode?: boolean
   resetPasswordCode?: boolean
+  verificationCodeExpiresAt?: boolean
+  resetPasswordCodeExpiresAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "firstName" | "lastName" | "email" | "password" | "createdAt" | "isVerified" | "isActive" | "verificationCode" | "resetPasswordCode", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "firstName" | "lastName" | "email" | "password" | "createdAt" | "isVerified" | "isActive" | "verificationCode" | "resetPasswordCode" | "verificationCodeExpiresAt" | "resetPasswordCodeExpiresAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   session?: boolean | Prisma.User$sessionArgs<ExtArgs>
   cart?: boolean | Prisma.User$cartArgs<ExtArgs>
@@ -811,6 +891,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     isActive: boolean
     verificationCode: string | null
     resetPasswordCode: string | null
+    verificationCodeExpiresAt: Date | null
+    resetPasswordCodeExpiresAt: Date | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1247,6 +1329,8 @@ export interface UserFieldRefs {
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly verificationCode: Prisma.FieldRef<"User", 'String'>
   readonly resetPasswordCode: Prisma.FieldRef<"User", 'String'>
+  readonly verificationCodeExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly resetPasswordCodeExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
 

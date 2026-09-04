@@ -1140,7 +1140,9 @@ export const UserScalarFieldEnum = {
   isVerified: 'isVerified',
   isActive: 'isActive',
   verificationCode: 'verificationCode',
-  resetPasswordCode: 'resetPasswordCode'
+  resetPasswordCode: 'resetPasswordCode',
+  verificationCodeExpiresAt: 'verificationCodeExpiresAt',
+  resetPasswordCodeExpiresAt: 'resetPasswordCodeExpiresAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

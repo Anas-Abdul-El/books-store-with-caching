@@ -23,6 +23,8 @@ model User {
   isActive Boolean @default(true)
   verificationCode String?
   resetPasswordCode String?
+  verificationCodeExpiresAt DateTime?
+  resetPasswordCodeExpiresAt DateTime?
 
   session Session? 
 
