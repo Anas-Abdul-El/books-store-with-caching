@@ -31,9 +31,7 @@ type RegisterSchemaType = z.infer<typeof registerSchema>;
 
 // Define the Zod schema for sending verification code schema
 const sendVerificationCodeSchema = z.object({
-    body: z.object({
-        email: z.string().email("Invalid email address"),
-    }),
+    email: z.string().email("Invalid email address"),
 });
 
 // Define the Zod schema for verifying verification code types
@@ -41,9 +39,7 @@ type SendVerificationCodeSchemaType = z.infer<typeof sendVerificationCodeSchema>
 
 // Define the Zod schema for verifying verification code schema
 const verifyVerificationCodeSchema = z.object({
-    body: z.object({
-        token: z.string(),
-    }),
+    token: z.string(),
 });
 
 // Define the Zod schema for verifying verification code types

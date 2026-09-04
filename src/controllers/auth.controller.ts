@@ -11,10 +11,15 @@ import type { NextFunction, Request, Response } from "express";
 import type { User } from "../generated/prisma/browser";
 import { saveSessionToken } from "../repo/auth.repo";
 import { authService } from "../services";
+import { verifyEmail } from "../services/auth.services";
 import type { LoginRequestBody, LoginResponseBody } from "../types/auth";
 import AppError from "../utils/AppErr";
 import { generateToken, verifyToken } from "../utils/token";
-import type { RegisterSchemaType } from "../validation/auth.schema";
+import type {
+    RegisterSchemaType,
+    SendVerificationCodeSchemaType,
+    VerifyVerificationCodeSchemaType,
+} from "../validation/auth.schema";
 
 /**
  * login handles the user login process.
@@ -96,4 +101,43 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
     res.status(200).send({ message: "Logged out successfully" });
 };
 
-export default { userLogin, register, refreshAccessToken, logout };
+/**
+ * sentVerificationCode handles verifing the acc.
+ * It send a verfication token by email provided by the body.
+ * @param req - The Express request object containing the email in body.
+ * @param res - The Express response object used to send the response.
+ * @param next - The next middleware function in the Express pipeline for error handling.
+ */
+const sentVerificationCode = async (
+    req: Request<{}, {}, SendVerificationCodeSchemaType, {}>,
+    res: Response,
+    next: NextFunction,
+) => {
+    const { email } = req.body;
+
+    const verifyToken = generateToken({ email }, "verify");
+    await authService.sendVerificationEmail(email, verifyToken);
+
+    res.status(200).send({ msg: `code send to email: ${email}` });
+};
+
+/**
+ * verifyVerificationCode handles verifing the acc.
+ * It verifies the verify token provided by the email sent by the previos route
+ * @param req - The Express request object containing the verify token in body.
+ * @param res - The Express response object used to send the response.
+ * @param next - The next middleware function in the Express pipeline for error handling.
+ */
+const verifyVerificationCode = async (
+    req: Request<{}, {}, VerifyVerificationCodeSchemaType, {}>,
+    res: Response,
+    next: NextFunction,
+) => {
+    const { token } = req.body;
+
+    await verifyEmail(token);
+
+    res.status(200).send({ msg: "account has been verified" });
+};
+
+export default { userLogin, register, refreshAccessToken, logout, verifyVerificationCode, sentVerificationCode };

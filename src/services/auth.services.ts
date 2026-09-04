@@ -120,7 +120,7 @@ const logout = async (userId: string) => {
  * @param token - The verification token to include in the email.
  * @returns A promise that resolves when the email is sent successfully.
  */
-export const sendVerificationEmail = async (email: string, token: string) => {
+const sendVerificationEmail = async (email: string, token: string) => {
     const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
 
     await createVerificationCode(email, token);
@@ -147,7 +147,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
  * @param token - The verification token to verify the user's email.
  * @returns A promise that resolves when the email verification process is complete.
  */
-export const verifyEmail = async (token: string) => {
+const verifyEmail = async (token: string) => {
     const isTokenValid = verifyToken(token, "verify");
     if (!isTokenValid) throw new AppError("Invalid Token", 400);
 
@@ -163,4 +163,4 @@ export const verifyEmail = async (token: string) => {
     await updateUserVerificationStatus(user.userId, true);
 };
 
-export { loginUser, logout, refreshAccessToken, registerUser };
+export { loginUser, logout, refreshAccessToken, registerUser, sendVerificationEmail, verifyEmail };
