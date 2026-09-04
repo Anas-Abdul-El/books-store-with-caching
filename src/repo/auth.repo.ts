@@ -57,6 +57,11 @@ const createUser = async (userInfo: RegisteredUser) => {
     });
 };
 
+/**
+ * getUserById retrieves a user from the database based on their its Id.
+ * @param userId - The user id of the user to retrieve.
+ * @returns A Promise that resolves to the user object if found, or null if no user exists with the given id.
+ */
 const getUserById = async (userId: string) => {
     return await prisma.session.findUnique({
         where: {
