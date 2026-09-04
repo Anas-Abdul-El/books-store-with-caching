@@ -12,7 +12,8 @@ import type { User } from "../generated/prisma/browser";
 import { saveSessionToken } from "../repo/auth.repo";
 import { authService } from "../services";
 import type { LoginRequestBody, LoginResponseBody } from "../types/auth";
-import { generateToken } from "../utils/token";
+import AppError from "../utils/AppErr";
+import { generateToken, verifyToken } from "../utils/token";
 import type { RegisterSchemaType } from "../validation/auth.schema";
 
 /**
@@ -75,4 +76,24 @@ const refreshAccessToken = async (req: Request, res: Response, next: NextFunctio
     res.json({ accessToken: newToken });
 };
 
-export default { userLogin, register, refreshAccessToken };
+/**
+ * logout handles the user logout process.
+ * It verifies the refresh token from the request cookies, calls the authentication service to delete the user's session,
+ * clears the refresh token cookie, and sends the appropriate response back to the client.
+ * @param req - The Express request object containing the refresh token in cookies.
+ * @param res - The Express response object used to send the response.
+ * @param next - The next middleware function in the Express pipeline for error handling.
+ */
+const logout = async (req: Request, res: Response, next: NextFunction) => {
+    const refreshToken = verifyToken(req.cookies.refreshToken, "refresh") as {
+        userId: string;
+    };
+
+    if (!refreshToken) next(new AppError("Refresh token not found", 400));
+
+    await authService.logout(refreshToken.userId);
+    res.clearCookie("refreshToken");
+    res.status(200).send({ message: "Logged out successfully" });
+};
+
+export default { userLogin, register, refreshAccessToken, logout };

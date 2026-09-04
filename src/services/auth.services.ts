@@ -90,4 +90,18 @@ const refreshAccessToken = async (refreshToken: string) => {
     return newAcessToken;
 };
 
-export { loginUser, refreshAccessToken, registerUser };
+/**
+ * logout handles the logic for logging out a user.
+ * It takes the user's ID as input and deletes the associated session tokens from the database.
+ * @param userId - The ID of the user to log out.
+ * @returns A promise that resolves when the logout operation is complete.
+ */
+const logout = async (userId: string) => {
+    try {
+        return await deleteToken(userId);
+    } catch (error) {
+        throw new AppError("Failed to logout user", 500);
+    }
+};
+
+export { loginUser, logout, refreshAccessToken, registerUser };
