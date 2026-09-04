@@ -62,4 +62,17 @@ const register = async (
     res.status(201).send(user);
 };
 
-export default { userLogin, register };
+/**
+ * refresh Access Token handles the user access token refreshing process.
+ * @param req - The Express request object containing the refreshToken.
+ * @param res - The Express response object used to send the response.
+ * @param next - The next middleware function in the Express pipeline for error handling.
+ */
+const refreshAccessToken = async (req: Request, res: Response, next: NextFunction) => {
+    const refreshToken = req.cookies.refreshToken;
+    const newToken = await authService.refreshAccessToken(refreshToken);
+
+    res.json({ accessToken: newToken });
+};
+
+export default { userLogin, register, refreshAccessToken };

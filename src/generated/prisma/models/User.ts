@@ -222,7 +222,7 @@ export type UserWhereInput = {
   isActive?: Prisma.BoolFilter<"User"> | boolean
   verificationCode?: Prisma.StringNullableFilter<"User"> | string | null
   resetPasswordCode?: Prisma.StringNullableFilter<"User"> | string | null
-  session?: Prisma.SessionListRelationFilter
+  session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
   cart?: Prisma.XOR<Prisma.CartNullableScalarRelationFilter, Prisma.CartWhereInput> | null
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
 }
@@ -238,7 +238,7 @@ export type UserOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrderInput | Prisma.SortOrder
-  session?: Prisma.SessionOrderByRelationAggregateInput
+  session?: Prisma.SessionOrderByWithRelationInput
   cart?: Prisma.CartOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
 }
@@ -257,7 +257,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"User"> | boolean
   verificationCode?: Prisma.StringNullableFilter<"User"> | string | null
   resetPasswordCode?: Prisma.StringNullableFilter<"User"> | string | null
-  session?: Prisma.SessionListRelationFilter
+  session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
   cart?: Prisma.XOR<Prisma.CartNullableScalarRelationFilter, Prisma.CartWhereInput> | null
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
 }, "userId" | "email">
@@ -305,7 +305,7 @@ export type UserCreateInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
-  session?: Prisma.SessionCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionCreateNestedOneWithoutUserInput
   cart?: Prisma.CartCreateNestedOneWithoutUserInput
   order?: Prisma.OrderCreateNestedOneWithoutUserInput
 }
@@ -321,7 +321,7 @@ export type UserUncheckedCreateInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
-  session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionUncheckedCreateNestedOneWithoutUserInput
   cart?: Prisma.CartUncheckedCreateNestedOneWithoutUserInput
   order?: Prisma.OrderUncheckedCreateNestedOneWithoutUserInput
 }
@@ -337,7 +337,7 @@ export type UserUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  session?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUpdateOneWithoutUserNestedInput
   cart?: Prisma.CartUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUpdateOneWithoutUserNestedInput
 }
@@ -353,7 +353,7 @@ export type UserUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUncheckedUpdateOneWithoutUserNestedInput
   cart?: Prisma.CartUncheckedUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUncheckedUpdateOneWithoutUserNestedInput
 }
@@ -586,7 +586,7 @@ export type UserCreateWithoutCartInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
-  session?: Prisma.SessionCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionCreateNestedOneWithoutUserInput
   order?: Prisma.OrderCreateNestedOneWithoutUserInput
 }
 
@@ -601,7 +601,7 @@ export type UserUncheckedCreateWithoutCartInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
-  session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionUncheckedCreateNestedOneWithoutUserInput
   order?: Prisma.OrderUncheckedCreateNestedOneWithoutUserInput
 }
 
@@ -632,7 +632,7 @@ export type UserUpdateWithoutCartInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  session?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUpdateOneWithoutUserNestedInput
 }
 
@@ -647,7 +647,7 @@ export type UserUncheckedUpdateWithoutCartInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUncheckedUpdateOneWithoutUserNestedInput
   order?: Prisma.OrderUncheckedUpdateOneWithoutUserNestedInput
 }
 
@@ -662,7 +662,7 @@ export type UserCreateWithoutOrderInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
-  session?: Prisma.SessionCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionCreateNestedOneWithoutUserInput
   cart?: Prisma.CartCreateNestedOneWithoutUserInput
 }
 
@@ -677,7 +677,7 @@ export type UserUncheckedCreateWithoutOrderInput = {
   isActive?: boolean
   verificationCode?: string | null
   resetPasswordCode?: string | null
-  session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionUncheckedCreateNestedOneWithoutUserInput
   cart?: Prisma.CartUncheckedCreateNestedOneWithoutUserInput
 }
 
@@ -708,7 +708,7 @@ export type UserUpdateWithoutOrderInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  session?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUpdateOneWithoutUserNestedInput
   cart?: Prisma.CartUpdateOneWithoutUserNestedInput
 }
 
@@ -723,39 +723,10 @@ export type UserUncheckedUpdateWithoutOrderInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUncheckedUpdateOneWithoutUserNestedInput
   cart?: Prisma.CartUncheckedUpdateOneWithoutUserNestedInput
 }
 
-
-/**
- * Count Type UserCountOutputType
- */
-
-export type UserCountOutputType = {
-  session: number
-}
-
-export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  session?: boolean | UserCountOutputTypeCountSessionArgs
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the UserCountOutputType
-   */
-  select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountSessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SessionWhereInput
-}
 
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -772,7 +743,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   session?: boolean | Prisma.User$sessionArgs<ExtArgs>
   cart?: boolean | Prisma.User$cartArgs<ExtArgs>
   order?: boolean | Prisma.User$orderArgs<ExtArgs>
-  _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -819,7 +789,6 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   session?: boolean | Prisma.User$sessionArgs<ExtArgs>
   cart?: boolean | Prisma.User$cartArgs<ExtArgs>
   order?: boolean | Prisma.User$orderArgs<ExtArgs>
-  _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -827,7 +796,7 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    session: Prisma.$SessionPayload<ExtArgs>[]
+    session: Prisma.$SessionPayload<ExtArgs> | null
     cart: Prisma.$CartPayload<ExtArgs> | null
     order: Prisma.$OrderPayload<ExtArgs> | null
   }
@@ -1236,7 +1205,7 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  session<T extends Prisma.User$sessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  session<T extends Prisma.User$sessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionArgs<ExtArgs>>): Prisma.Prisma__SessionClient<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   cart<T extends Prisma.User$cartArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cartArgs<ExtArgs>>): Prisma.Prisma__CartClient<runtime.Types.Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   order<T extends Prisma.User$orderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$orderArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1687,11 +1656,6 @@ export type User$sessionArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.SessionInclude<ExtArgs> | null
   where?: Prisma.SessionWhereInput
-  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
-  cursor?: Prisma.SessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
 }
 
 /**

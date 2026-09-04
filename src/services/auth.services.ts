@@ -8,9 +8,10 @@
  */
 
 import type { User } from "../generated/prisma/browser";
-import { createUser, getUserByEmail } from "../repo/auth.repo";
+import { createUser, deleteToken, getUserByEmail, getUserById } from "../repo/auth.repo";
 import AppError from "../utils/AppErr";
 import { compareHash, createHash } from "../utils/hash";
+import { generateToken, verifyToken } from "../utils/token";
 import { type AuthSchemaType, type RegisterSchemaType } from "../validation/auth.schema";
 
 /**
@@ -60,4 +61,33 @@ const registerUser = async (data: RegisterSchemaType): Promise<Omit<User, "passw
     return userWithoutPassword;
 };
 
-export { loginUser, registerUser };
+/**
+ * refreshAccessToken handles the logic for refresh eccess token,
+ * It takes the validated refresh token as input and return a new refresh token,
+ * @param refreshToken - The validated refresh token of type string.
+ */
+const refreshAccessToken = async (refreshToken: string) => {
+    let payload;
+    try {
+        payload = verifyToken(refreshToken, "refresh") as { userId: string };
+    } catch {
+        throw new AppError("Invalid or expired token", 400);
+    }
+
+    const { userId } = payload;
+    const dbRefreshToken = await getUserById(userId);
+    if (!dbRefreshToken) throw new AppError("Invalid or expired token", 400);
+
+    const { expiresAt } = dbRefreshToken;
+
+    const now = new Date();
+    if (expiresAt > now) {
+        await deleteToken(userId);
+        throw new AppError("Invalid or expired token", 400);
+    }
+
+    const newAcessToken = generateToken({ userId }, "access");
+    return newAcessToken;
+};
+
+export { loginUser, refreshAccessToken, registerUser };

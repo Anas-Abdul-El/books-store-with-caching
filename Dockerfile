@@ -2,7 +2,7 @@ FROM node:22.16
 
 WORKDIR /app
 
-RUN npm install -g pnpm@11.24.0
+RUN npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml ./
 

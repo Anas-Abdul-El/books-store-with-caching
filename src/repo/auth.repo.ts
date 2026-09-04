@@ -57,4 +57,28 @@ const createUser = async (userInfo: RegisteredUser) => {
     });
 };
 
-export { createUser, getUserByEmail, saveSessionToken };
+const getUserById = async (userId: string) => {
+    return await prisma.session.findUnique({
+        where: {
+            userId,
+        },
+        select: {
+            expiresAt: true,
+        },
+    });
+};
+
+/**
+ * deleteToken deletes all session tokens associated with a specific user from the database.
+ * @param userId - The ID of the user whose session tokens should be deleted.
+ * @returns A Promise that resolves to the result of the delete operation.
+ */
+const deleteToken = async (userId: string) => {
+    return await prisma.session.deleteMany({
+        where: {
+            userId,
+        },
+    });
+};
+
+export { createUser, deleteToken, getUserByEmail, getUserById, saveSessionToken };

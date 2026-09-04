@@ -24,7 +24,7 @@ model User {
   verificationCode String?
   resetPasswordCode String?
 
-  session Session[]
+  session Session? 
 
   cart Cart?
 
@@ -39,7 +39,7 @@ model Session {
   expiresAt DateTime
   createdAt DateTime @default(now())
 
-  userId String 
+  userId String @unique
   user User @relation(references: [userId], fields: [userId])
 
   @@index([refreshToken])

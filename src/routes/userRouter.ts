@@ -13,6 +13,7 @@ authRouter.post("/login", validatorMiddleware(authSchema, "body"), catchAsync(au
 authRouter.post("/register", validatorMiddleware(registerSchema, "body"), catchAsync(authController.register));
 
 // refresh token route
+authRouter.post("/refresh", catchAsync(authController.refreshAccessToken));
 
 // logout route
 

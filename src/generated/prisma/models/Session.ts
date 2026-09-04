@@ -231,14 +231,14 @@ export type SessionOrderByWithRelationInput = {
 export type SessionWhereUniqueInput = Prisma.AtLeast<{
   sessionId?: number
   refreshToken?: string
+  userId?: string
   AND?: Prisma.SessionWhereInput | Prisma.SessionWhereInput[]
   OR?: Prisma.SessionWhereInput[]
   NOT?: Prisma.SessionWhereInput | Prisma.SessionWhereInput[]
   expiresAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
-  userId?: Prisma.StringFilter<"Session"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "sessionId" | "refreshToken">
+}, "sessionId" | "refreshToken" | "userId">
 
 export type SessionOrderByWithAggregationInput = {
   sessionId?: Prisma.SortOrder
@@ -316,14 +316,9 @@ export type SessionUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type SessionListRelationFilter = {
-  every?: Prisma.SessionWhereInput
-  some?: Prisma.SessionWhereInput
-  none?: Prisma.SessionWhereInput
-}
-
-export type SessionOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type SessionNullableScalarRelationFilter = {
+  is?: Prisma.SessionWhereInput | null
+  isNot?: Prisma.SessionWhereInput | null
 }
 
 export type SessionCountOrderByAggregateInput = {
@@ -358,46 +353,36 @@ export type SessionSumOrderByAggregateInput = {
   sessionId?: Prisma.SortOrder
 }
 
-export type SessionCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput> | Prisma.SessionCreateWithoutUserInput[] | Prisma.SessionUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutUserInput | Prisma.SessionCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.SessionCreateManyUserInputEnvelope
-  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+export type SessionCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutUserInput
+  connect?: Prisma.SessionWhereUniqueInput
 }
 
-export type SessionUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput> | Prisma.SessionCreateWithoutUserInput[] | Prisma.SessionUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutUserInput | Prisma.SessionCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.SessionCreateManyUserInputEnvelope
-  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+export type SessionUncheckedCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutUserInput
+  connect?: Prisma.SessionWhereUniqueInput
 }
 
-export type SessionUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput> | Prisma.SessionCreateWithoutUserInput[] | Prisma.SessionUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutUserInput | Prisma.SessionCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.SessionUpsertWithWhereUniqueWithoutUserInput | Prisma.SessionUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.SessionCreateManyUserInputEnvelope
-  set?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
-  disconnect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
-  delete?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
-  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
-  update?: Prisma.SessionUpdateWithWhereUniqueWithoutUserInput | Prisma.SessionUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.SessionUpdateManyWithWhereWithoutUserInput | Prisma.SessionUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
+export type SessionUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutUserInput
+  upsert?: Prisma.SessionUpsertWithoutUserInput
+  disconnect?: Prisma.SessionWhereInput | boolean
+  delete?: Prisma.SessionWhereInput | boolean
+  connect?: Prisma.SessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SessionUpdateToOneWithWhereWithoutUserInput, Prisma.SessionUpdateWithoutUserInput>, Prisma.SessionUncheckedUpdateWithoutUserInput>
 }
 
-export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput> | Prisma.SessionCreateWithoutUserInput[] | Prisma.SessionUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutUserInput | Prisma.SessionCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.SessionUpsertWithWhereUniqueWithoutUserInput | Prisma.SessionUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.SessionCreateManyUserInputEnvelope
-  set?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
-  disconnect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
-  delete?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
-  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
-  update?: Prisma.SessionUpdateWithWhereUniqueWithoutUserInput | Prisma.SessionUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.SessionUpdateManyWithWhereWithoutUserInput | Prisma.SessionUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
+export type SessionUncheckedUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutUserInput
+  upsert?: Prisma.SessionUpsertWithoutUserInput
+  disconnect?: Prisma.SessionWhereInput | boolean
+  delete?: Prisma.SessionWhereInput | boolean
+  connect?: Prisma.SessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SessionUpdateToOneWithWhereWithoutUserInput, Prisma.SessionUpdateWithoutUserInput>, Prisma.SessionUncheckedUpdateWithoutUserInput>
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -426,43 +411,15 @@ export type SessionCreateOrConnectWithoutUserInput = {
   create: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput>
 }
 
-export type SessionCreateManyUserInputEnvelope = {
-  data: Prisma.SessionCreateManyUserInput | Prisma.SessionCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type SessionUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.SessionWhereUniqueInput
+export type SessionUpsertWithoutUserInput = {
   update: Prisma.XOR<Prisma.SessionUpdateWithoutUserInput, Prisma.SessionUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.SessionCreateWithoutUserInput, Prisma.SessionUncheckedCreateWithoutUserInput>
+  where?: Prisma.SessionWhereInput
 }
 
-export type SessionUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.SessionWhereUniqueInput
+export type SessionUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.SessionWhereInput
   data: Prisma.XOR<Prisma.SessionUpdateWithoutUserInput, Prisma.SessionUncheckedUpdateWithoutUserInput>
-}
-
-export type SessionUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.SessionScalarWhereInput
-  data: Prisma.XOR<Prisma.SessionUpdateManyMutationInput, Prisma.SessionUncheckedUpdateManyWithoutUserInput>
-}
-
-export type SessionScalarWhereInput = {
-  AND?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
-  OR?: Prisma.SessionScalarWhereInput[]
-  NOT?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
-  sessionId?: Prisma.IntFilter<"Session"> | number
-  refreshToken?: Prisma.StringFilter<"Session"> | string
-  expiresAt?: Prisma.DateTimeFilter<"Session"> | Date | string
-  createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
-  userId?: Prisma.StringFilter<"Session"> | string
-}
-
-export type SessionCreateManyUserInput = {
-  sessionId?: number
-  refreshToken: string
-  expiresAt: Date | string
-  createdAt?: Date | string
 }
 
 export type SessionUpdateWithoutUserInput = {
@@ -472,13 +429,6 @@ export type SessionUpdateWithoutUserInput = {
 }
 
 export type SessionUncheckedUpdateWithoutUserInput = {
-  sessionId?: Prisma.IntFieldUpdateOperationsInput | number
-  refreshToken?: Prisma.StringFieldUpdateOperationsInput | string
-  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type SessionUncheckedUpdateManyWithoutUserInput = {
   sessionId?: Prisma.IntFieldUpdateOperationsInput | number
   refreshToken?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
