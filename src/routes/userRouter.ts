@@ -18,6 +18,4 @@ authRouter.post("/refresh", catchAsync(authController.refreshAccessToken));
 // logout route
 authRouter.post("/logout", catchAsync(authController.logout));
 
-// verify account route
-
 export default authRouter;
