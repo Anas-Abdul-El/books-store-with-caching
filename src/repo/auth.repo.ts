@@ -86,4 +86,56 @@ const deleteToken = async (userId: string) => {
     });
 };
 
+/**
+ * createVerificationCode updates the user's record in the database with a new verification code.
+ * The code expires 10 minutes after being created.
+ * @param userId - The ID of the user for whom the verification code is being created.
+ * @param code - The verification code to be associated with the user.
+ * @returns A Promise that resolves to the updated user object with the new verification code.
+ */
+export const createVerificationCode = async (email: string, code: string) => {
+    return await prisma.user.update({
+        where: {
+            email,
+        },
+        data: {
+            verificationCode: code,
+            verificationCodeExpiresAt: new Date(Date.now() + 60 * 60 * 24 * 1000),
+        },
+    });
+};
+
+/**
+ * getUserByVerificationToken retrieves a user from the database based on their verification token.
+ * @param token - The verification token associated with the user.
+ * @returns A Promise that resolves to the user object if found, or null if no user exists with the given token.
+ */
+export const getUserByVerificationToken = async (token: string) => {
+    return await prisma.user.findFirst({
+        where: {
+            verificationCode: token,
+        },
+    });
+};
+
+/**
+ * updateUserVerificationStatus updates the verification status of a user in the database.
+ * It sets the isVerified field to true and clears the verification code and its expiration date.
+ * @param userId - The ID of the user whose verification status is being updated.
+ * @param isVerified - A boolean indicating whether the user is verified (true) or not (false).
+ * @returns A Promise that resolves to the updated user object with the new verification status.
+ */
+export const updateUserVerificationStatus = async (userId: string, isVerified: boolean) => {
+    return await prisma.user.update({
+        where: {
+            userId,
+        },
+        data: {
+            isVerified,
+            verificationCode: null,
+            verificationCodeExpiresAt: null,
+        },
+    });
+};
+
 export { createUser, deleteToken, getUserByEmail, getUserById, saveSessionToken };

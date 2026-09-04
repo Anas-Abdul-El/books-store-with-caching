@@ -29,6 +29,7 @@
         "express": "^5.2.1",
         "helmet": "^8.3.0",
         "jsonwebtoken": "^9.0.3",
+        "nodemailer": "^9.1.1",
         "pg": "^8.23.0",
         "redis": "^6.2.1",
         "zod": "^4.5.4"
@@ -38,6 +39,7 @@
         "@types/express": "^5.0.6",
         "@types/jsonwebtoken": "^9.0.10",
         "@types/node": "^26.4.0",
+        "@types/nodemailer": "^8.0.1",
         "@types/pg": "^8.23.1",
         "@types/redis": "^4.0.11",
         "prisma": "7.10.0",
