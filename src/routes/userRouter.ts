@@ -1,4 +1,8 @@
 import { Router } from "express";
+import { userController } from "../controllers";
+import { validatorMiddleware } from "../middlewares";
+import catchAsync from "../utils/catchAsync";
+import { sendPasswordResetTokenSchema, verifyPasswordResetTokenSchema } from "../validation/user.schema";
 
 const userRouter: Router = Router();
 
@@ -6,9 +10,19 @@ const userRouter: Router = Router();
 
 // get single user route
 
-// send reset password token route
+// sendPasswordresetToken route to send a reset password token
+userRouter.post(
+    "/sendPasswordresetCode",
+    validatorMiddleware(sendPasswordResetTokenSchema, "body"),
+    catchAsync(userController.sentPasswordResetToken),
+);
 
-// verify reset password token route
+// verifyVerificationToken route to verify the email send by the sendPasswordresetCode route
+userRouter.post(
+    "/verifyPasswordresetCode",
+    validatorMiddleware(verifyPasswordResetTokenSchema, "body"),
+    catchAsync(userController.verifyPasswordResetToken),
+);
 
 // get uesr profile route
 

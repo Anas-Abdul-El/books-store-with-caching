@@ -28,4 +28,4 @@ const verifyPasswordResetToken = async (
     res.status(200).send({ msg: "password has been reset" });
 };
 
-export { sentPasswordResetToken, verifyPasswordResetToken };
+export default { sentPasswordResetToken, verifyPasswordResetToken };
