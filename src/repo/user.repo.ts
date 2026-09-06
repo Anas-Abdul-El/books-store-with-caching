@@ -1,13 +1,13 @@
 import { prisma } from "../libs/prisma";
 
 /**
- * createPasswordResetCode updates the user's record in the database with a new password Reset code.
+ * createPasswordResetToken updates the user's record in the database with a new password Reset token.
  * The code expires 10 minutes after being created.
  * @param userId - The ID of the user for whom the password Reset code is being created.
  * @param code - The password Reset code to be associated with the user.
- * @returns A Promise that resolves to the updated user object with the new verification code.
+ * @returns A Promise that resolves to the updated user object with the new verification token.
  */
-export const createPasswordResetCode = async (email: string, code: string) => {
+export const createPasswordResetToken = async (email: string, code: string) => {
     return await prisma.user.update({
         where: {
             email,
