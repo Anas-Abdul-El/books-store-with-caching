@@ -1,9 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
 import { userService } from "../services";
 import { generateToken } from "../utils/token";
+import type { SendPasswordResetTokenSchemaType, VerifyPasswordResetTokenSchemaType } from "../validation/user.schema";
 
 const sentPasswordResetToken = async (
-    req: Request<{}, {}, SendPasswordResetCodeSchemaType, {}>,
+    req: Request<{}, {}, SendPasswordResetTokenSchemaType, {}>,
     res: Response,
     next: NextFunction,
 ) => {
@@ -16,7 +17,7 @@ const sentPasswordResetToken = async (
 };
 
 const verifyPasswordResetToken = async (
-    req: Request<{}, {}, VerifyPasswordResetCodeSchemaType, {}>,
+    req: Request<{}, {}, VerifyPasswordResetTokenSchemaType, {}>,
     res: Response,
     next: NextFunction,
 ) => {
