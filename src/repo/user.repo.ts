@@ -19,6 +19,13 @@ export const createPasswordResetCode = async (email: string, code: string) => {
     });
 };
 
+/**
+ * updatePassword updates the user's record in
+ * the database with a new password.
+ * @param userId - The ID of the user for whom the
+ * @param password - The new password to be associated with the user
+ * @returns A Promise that resolves to the updated user object
+ */
 export const updatePassword = async (userId: string, password: string) => {
     return await prisma.user.update({
         where: {
