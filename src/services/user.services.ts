@@ -5,7 +5,7 @@ import AppError from "../utils/AppErr";
 import { compareHash, createHash } from "../utils/hash";
 import { verifyToken } from "../utils/token";
 
-const sendPasswordResetCode = async (email: string, token: string) => {
+const sendPasswordResetToken = async (email: string, token: string) => {
     const verificationUrl = `${process.env.FRONTEND_URL}/password-reset?token=${token}`;
 
     await createPasswordResetToken(email, token);
@@ -25,7 +25,7 @@ const sendPasswordResetCode = async (email: string, token: string) => {
     }
 };
 
-const verifyPasswordResetCode = async (newPassword: string, oldPassword: string, token: string) => {
+const verifyPasswordResetToken = async (newPassword: string, oldPassword: string, token: string) => {
     const isTokenValid = verifyToken(token, "verify");
     if (isTokenValid) throw new AppError("invalid or expired token", 400);
 
@@ -44,4 +44,4 @@ const verifyPasswordResetCode = async (newPassword: string, oldPassword: string,
     await updatePassword(user.userId, password);
 };
 
-export { sendPasswordResetCode, verifyPasswordResetCode };
+export { sendPasswordResetToken, verifyPasswordResetToken };
