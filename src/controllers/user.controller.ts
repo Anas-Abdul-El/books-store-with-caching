@@ -1,7 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
+import type { User } from "../generated/prisma/browser";
 import { userService } from "../services";
 import { generateToken } from "../utils/token";
-import type { SendPasswordResetTokenSchemaType, VerifyPasswordResetTokenSchemaType } from "../validation/user.schema";
+import type {
+    GetUserByIdSchemaType,
+    SendPasswordResetTokenSchemaType,
+    VerifyPasswordResetTokenSchemaType,
+} from "../validation/user.schema";
 
 const sentPasswordResetToken = async (
     req: Request<{}, {}, SendPasswordResetTokenSchemaType, {}>,
@@ -28,6 +33,16 @@ const verifyPasswordResetToken = async (
     res.status(200).send({ msg: "password has been reset" });
 };
 
-const getUserById = async (req: Request<{}, {}, {}, {}>, res: Response, next: NextFunction) => {};
+const getUserById = async (
+    req: Request<GetUserByIdSchemaType, {}, {}, {}>,
+    res: Response<User>,
+    next: NextFunction,
+) => {
+    // get the id
+    // check if this user exists in redis
+    // if yes get it from redis
+    // if no get it from db and store it in redis
+    // return the user
+};
 
 export default { sentPasswordResetToken, verifyPasswordResetToken, getUserById };

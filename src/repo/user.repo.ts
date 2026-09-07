@@ -7,7 +7,7 @@ import { prisma } from "../libs/prisma";
  * @param code - The password Reset code to be associated with the user.
  * @returns A Promise that resolves to the updated user object with the new verification token.
  */
-export const createPasswordResetToken = async (email: string, code: string) => {
+const createPasswordResetToken = async (email: string, code: string) => {
     return await prisma.user.update({
         where: {
             email,
@@ -26,7 +26,7 @@ export const createPasswordResetToken = async (email: string, code: string) => {
  * @param password - The new password to be associated with the user
  * @returns A Promise that resolves to the updated user object
  */
-export const updatePassword = async (userId: string, password: string) => {
+const updatePassword = async (userId: string, password: string) => {
     return await prisma.user.update({
         where: {
             userId,
@@ -36,3 +36,5 @@ export const updatePassword = async (userId: string, password: string) => {
         },
     });
 };
+
+export { createPasswordResetToken, updatePassword };
