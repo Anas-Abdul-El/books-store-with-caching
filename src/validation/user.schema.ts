@@ -14,6 +14,12 @@ const verifyPasswordResetTokenSchema = z.object({
 
 type VerifyPasswordResetTokenSchemaType = z.infer<typeof verifyPasswordResetTokenSchema>;
 
-export type { SendPasswordResetTokenSchemaType, VerifyPasswordResetTokenSchemaType };
+const getUserByIdSchema = z.object({
+    id: z.string().uuid(),
+});
 
-export { sendPasswordResetTokenSchema, verifyPasswordResetTokenSchema };
+type GetUserByIdSchemaType = z.infer<typeof getUserByIdSchema>;
+
+export type { GetUserByIdSchemaType, SendPasswordResetTokenSchemaType, VerifyPasswordResetTokenSchemaType };
+
+export { getUserByIdSchema, sendPasswordResetTokenSchema, verifyPasswordResetTokenSchema };

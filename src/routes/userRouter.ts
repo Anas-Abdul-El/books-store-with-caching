@@ -7,9 +7,10 @@ import { sendPasswordResetTokenSchema, verifyPasswordResetTokenSchema } from "..
 
 const userRouter: Router = Router();
 
-// get all users route
-
 // get single user route
+userRouter.get("/user/:id", authHandler);
+
+// get all users route
 
 // sendPasswordresetToken route to send a reset password token
 userRouter.post(
