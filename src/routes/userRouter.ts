@@ -3,12 +3,21 @@ import { userController } from "../controllers";
 import { validatorMiddleware } from "../middlewares";
 import authHandler from "../middlewares/authHandler.middleware";
 import catchAsync from "../utils/catchAsync";
-import { sendPasswordResetTokenSchema, verifyPasswordResetTokenSchema } from "../validation/user.schema";
+import {
+    getUserByIdSchema,
+    sendPasswordResetTokenSchema,
+    verifyPasswordResetTokenSchema,
+} from "../validation/user.schema";
 
 const userRouter: Router = Router();
 
 // get single user route
-userRouter.get("/user/:id", authHandler);
+userRouter.get(
+    "/user/:id",
+    authHandler,
+    validatorMiddleware(getUserByIdSchema, "params"),
+    catchAsync(userController.getUserById),
+);
 
 // get all users route
 
