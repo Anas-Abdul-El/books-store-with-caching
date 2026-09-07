@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authController } from "../controllers";
 import { validatorMiddleware } from "../middlewares";
+import authHandler from "../middlewares/authHandler.middleware";
 import catchAsync from "../utils/catchAsync";
 import {
     authSchema,
@@ -21,7 +22,7 @@ authRouter.post("/register", validatorMiddleware(registerSchema, "body"), catchA
 authRouter.post("/refresh", catchAsync(authController.refreshAccessToken));
 
 // logout route
-authRouter.post("/logout", catchAsync(authController.logout));
+authRouter.post("/logout", authHandler, catchAsync(authController.logout));
 
 // sendVerifyCode route to send a verify token
 authRouter.post(
