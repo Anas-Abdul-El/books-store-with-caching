@@ -12,18 +12,16 @@ const userRouter: Router = Router();
 
 // sendPasswordresetToken route to send a reset password token
 userRouter.post(
-    "/sendPasswordresetCode",
+    "/user/sendPasswordresetCode",
     validatorMiddleware(sendPasswordResetTokenSchema, "body"),
     catchAsync(userController.sentPasswordResetToken),
 );
 
 // verifyVerificationToken route to verify the email send by the sendPasswordresetCode route
 userRouter.post(
-    "/verifyPasswordresetCode",
+    "/user/verifyPasswordresetCode",
     validatorMiddleware(verifyPasswordResetTokenSchema, "body"),
     catchAsync(userController.verifyPasswordResetToken),
 );
-
-// get uesr profile route
 
 export default userRouter;
