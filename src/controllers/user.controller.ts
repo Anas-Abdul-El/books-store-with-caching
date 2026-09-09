@@ -38,11 +38,9 @@ const getUserById = async (
     res: Response<User>,
     next: NextFunction,
 ) => {
-    // get the id
-    // check if this user exists in redis
-    // if yes get it from redis
-    // if no get it from db and store it in redis
-    // return the user
+    const users = await userService.getAllUsers();
+
+    res.status(200).send(users);
 };
 
 export default { sentPasswordResetToken, verifyPasswordResetToken, getUserById };
