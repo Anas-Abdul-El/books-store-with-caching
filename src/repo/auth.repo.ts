@@ -93,7 +93,7 @@ const deleteToken = async (userId: string) => {
  * @param code - The verification code to be associated with the user.
  * @returns A Promise that resolves to the updated user object with the new verification code.
  */
-export const createVerificationCode = async (email: string, code: string) => {
+const createVerificationCode = async (email: string, code: string) => {
     return await prisma.user.update({
         where: {
             email,
@@ -110,7 +110,7 @@ export const createVerificationCode = async (email: string, code: string) => {
  * @param token - The verification token associated with the user.
  * @returns A Promise that resolves to the user object if found, or null if no user exists with the given token.
  */
-export const getUserByVerificationToken = async (token: string) => {
+const getUserByVerificationToken = async (token: string) => {
     return await prisma.user.findFirst({
         where: {
             verificationCode: token,
@@ -125,7 +125,7 @@ export const getUserByVerificationToken = async (token: string) => {
  * @param isVerified - A boolean indicating whether the user is verified (true) or not (false).
  * @returns A Promise that resolves to the updated user object with the new verification status.
  */
-export const updateUserVerificationStatus = async (userId: string, isVerified: boolean) => {
+const updateUserVerificationStatus = async (userId: string, isVerified: boolean) => {
     return await prisma.user.update({
         where: {
             userId,
@@ -138,4 +138,13 @@ export const updateUserVerificationStatus = async (userId: string, isVerified: b
     });
 };
 
-export { createUser, deleteToken, getUserByEmail, getUserById, saveSessionToken };
+export {
+    createUser,
+    createVerificationCode,
+    deleteToken,
+    getUserByEmail,
+    getUserById,
+    getUserByVerificationToken,
+    saveSessionToken,
+    updateUserVerificationStatus,
+};
