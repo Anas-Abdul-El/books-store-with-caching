@@ -2,7 +2,7 @@ import type { User } from "../generated/prisma/browser";
 import transporter from "../libs/nodemailer";
 import { connectRedis } from "../libs/redis";
 import { getUserByVerificationToken } from "../repo/auth.repo";
-import { createPasswordResetToken, updatePassword } from "../repo/user.repo";
+import { createPasswordResetToken, getUserByItsId, getUsers, updatePassword } from "../repo/user.repo";
 import AppError from "../utils/AppErr";
 import { compareHash, createHash } from "../utils/hash";
 import { verifyToken } from "../utils/token";
@@ -83,7 +83,7 @@ const getUserById = async (id: string): Promise<User> => {
         return parsedUser;
     }
 
-    const user = await getUserById(id);
+    const user = await getUserByItsId(id);
 
     if (!user) throw new AppError("User not found", 404);
 
@@ -94,4 +94,43 @@ const getUserById = async (id: string): Promise<User> => {
     return user;
 };
 
-export { getUserById, sendPasswordResetToken, verifyPasswordResetToken };
+const getAllUsers = async (): Promise<Array<User | null>> => {
+    const redis = await connectRedis();
+    let users: Array<User> = [];
+
+    const cachedUsersId = await redis.lRange("usersId", 0, -1);
+
+    if (cachedUsersId.length > 0) {
+        users = await Promise.all(
+            cachedUsersId.map(user => {
+                return getUserById(JSON.parse(user));
+            }),
+        );
+
+        return users.filter(Boolean); // remove null values from the array
+    }
+
+    users = await getUsers();
+
+    if (!users) {
+        throw new AppError("No users found", 204);
+    }
+
+    const usersId = users.filter(Boolean).map(user => JSON.stringify(user.userId));
+
+    await redis.lPush("usersId", usersId);
+
+    // Cache every fetched user in the hash and give it the same per-field TTL as getUserById.
+    await Promise.all(
+        users.map(async (user, i) => {
+            const userKey = `user:${user.userId}`;
+            await redis.hSet("users", { [userKey]: JSON.stringify(user) });
+            await redis.hExpire("users", userKey, USER_CACHE_TTL_SECONDS);
+            return i;
+        }),
+    );
+
+    return users;
+};
+
+export { getAllUsers, getUserById, sendPasswordResetToken, verifyPasswordResetToken };

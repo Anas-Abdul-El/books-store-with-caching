@@ -37,8 +37,21 @@ const updatePassword = async (userId: string, password: string) => {
     });
 };
 
-const getAllUsers = async () => {
+/**
+ * getUserById retrieves a user from the database based on their its Id.
+ * @param userId - The user id of the user to retrieve.
+ * @returns A Promise that resolves to the user object if found, or null if no user exists with the given id.
+ */
+const getUserByItsId = async (userId: string) => {
+    return await prisma.user.findUnique({
+        where: {
+            userId,
+        },
+    });
+};
+
+const getUsers = async () => {
     return await prisma.user.findMany();
 };
 
-export { createPasswordResetToken, getAllUsers, updatePassword };
+export { createPasswordResetToken, getUserByItsId, getUsers, updatePassword };
