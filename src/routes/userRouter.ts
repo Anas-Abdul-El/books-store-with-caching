@@ -20,6 +20,7 @@ userRouter.get(
 );
 
 // get all users route
+userRouter.get("/users", authHandler, catchAsync(userController.getUsers));
 
 // sendPasswordresetToken route to send a reset password token
 userRouter.post(
