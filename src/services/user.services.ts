@@ -94,33 +94,61 @@ const getUserById = async (id: string): Promise<User> => {
     return user;
 };
 
+/**
+ * getAllUsers retrieves all users, using Redis to avoid hitting the database on
+ * every request. A Redis list ("usersId") holds the cached user ids, and each
+ * user body lives in the "users" hash (field "user:<id>"), as with getUserById.
+ *
+ * Flow:
+ *  1. Ensure the Redis client is connected.
+ *  2. Read every cached user id from the "usersId" list.
+ *  3. If the list is not empty (cache hit): load each user from the hash via
+ *     getUserById, and return them (null entries filtered out).
+ *  4. On a miss: fetch all users from the DB with getUsers().
+ *  5. If no users exist, throw a 204 AppError.
+ *  6. Push the user ids into the "usersId" list and cache every user in the
+ *     "users" hash, each with the same per-field TTL as getUserById.
+ *  7. Return the users read from the database.
+ *
+ * @returns A Promise resolving to the list of users (from cache or database).
+ * @throws {AppError} With a 204 status when no users are found.
+ */
 const getAllUsers = async (): Promise<Array<User | null>> => {
+    // Guarantee the Redis connection is open before any command is issued.
     const redis = await connectRedis();
     let users: Array<User> = [];
 
+    // Step 1 — Read the list of cached user ids (empty list = cold cache).
     const cachedUsersId = await redis.lRange("usersId", 0, -1);
 
+    // Step 2 — Cache hit: every id in the list means a cached user exists.
     if (cachedUsersId.length > 0) {
+        // Each stored id is a JSON string, so parse it back before fetching.
         users = await Promise.all(
             cachedUsersId.map(user => {
                 return getUserById(JSON.parse(user));
             }),
         );
 
+        // getUserById throws for missing users, so leftovers are null entries.
         return users.filter(Boolean); // remove null values from the array
     }
 
+    // Step 3 — Cache miss: load all users straight from the database.
     users = await getUsers();
 
+    // Step 4 — No records matched the query.
     if (!users) {
         throw new AppError("No users found", 204);
     }
 
+    // Step 5 — Serialize the ids so the whole list is cached as JSON strings.
     const usersId = users.filter(Boolean).map(user => JSON.stringify(user.userId));
 
+    // Step 6 — Populate the id list so the next call takes the cache-hit path.
     await redis.lPush("usersId", usersId);
 
-    // Cache every fetched user in the hash and give it the same per-field TTL as getUserById.
+    // Step 7 — Cache every fetched user in the hash and give it the same per-field TTL as getUserById.
     await Promise.all(
         users.map(async (user, i) => {
             const userKey = `user:${user.userId}`;
@@ -130,6 +158,7 @@ const getAllUsers = async (): Promise<Array<User | null>> => {
         }),
     );
 
+    // Step 8 — Return the users read from the database.
     return users;
 };
 
