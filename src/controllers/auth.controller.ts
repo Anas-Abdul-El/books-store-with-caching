@@ -140,4 +140,11 @@ const verifyVerificationCode = async (
     res.status(200).send({ msg: "account has been verified" });
 };
 
-export default { userLogin, register, refreshAccessToken, logout, verifyVerificationCode, sentVerificationCode };
+export default {
+    userLogin,
+    register,
+    refreshAccessToken,
+    logout,
+    verifyVerificationCode,
+    sentVerificationCode,
+};

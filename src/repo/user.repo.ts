@@ -37,4 +37,8 @@ const updatePassword = async (userId: string, password: string) => {
     });
 };
 
-export { createPasswordResetToken, updatePassword };
+const getAllUsers = async () => {
+    return await prisma.user.findMany();
+};
+
+export { createPasswordResetToken, getAllUsers, updatePassword };
