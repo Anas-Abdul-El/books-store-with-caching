@@ -38,9 +38,22 @@ const getUserById = async (
     res: Response<User>,
     next: NextFunction,
 ) => {
-    const users = await userService.getAllUsers();
+    const userId = req.params.id;
 
-    res.status(200).send(users);
+    const user = await userService.getUserById(userId);
+
+    res.status(200).json(user);
 };
 
-export default { sentPasswordResetToken, verifyPasswordResetToken, getUserById };
+const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const users = await userService.getAllUsers();
+
+    res.status(200).json(users);
+};
+
+export default {
+    sentPasswordResetToken,
+    verifyPasswordResetToken,
+    getUserById,
+    getUsers,
+};
