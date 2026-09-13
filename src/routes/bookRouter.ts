@@ -6,9 +6,10 @@ import { bookSchema } from "../validation/book.schema";
 const bookRouter: Router = Router();
 
 // get books by its id " /book "
-bookRouter.get("/book", validatorMiddleware(bookSchema, "body"), bookController.getBookById);
+bookRouter.get("/book/:id", validatorMiddleware(bookSchema, "query"), bookController.getBookById);
 
 // get all books routes with filters and sorting " /books?filter=&sort=&limit= "
+bookRouter.get("/books");
 
 // add book " /book/:id "
 

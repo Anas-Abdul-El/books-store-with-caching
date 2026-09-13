@@ -1,5 +1,5 @@
-interface BookRouterRequestBody {
+interface BookRouterRequestQuery {
     bookId: number;
 }
 
-export { BookRouterRequestBody };
+export { BookRouterRequestQuery };
