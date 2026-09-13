@@ -1,5 +1,5 @@
 interface BookRouterRequestQuery {
-    bookId: number;
+    id: string;
 }
 
 export { BookRouterRequestQuery };

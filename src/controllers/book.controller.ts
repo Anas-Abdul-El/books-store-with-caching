@@ -1,7 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import type { Book } from "../generated/prisma/browser";
 import { bookService } from "../services";
-import type { BookRouterRequestQuery } from "../types/book";
 
 /**
  * getBookById fetches a single book by its id and returns it to the caller.
@@ -12,14 +11,10 @@ import type { BookRouterRequestQuery } from "../types/book";
  * @param next - The Express next middleware callback (unused).
  * @returns A Promise resolving to the book object.
  */
-const getBookById = async (
-    req: Request<{}, {}, {}, BookRouterRequestQuery>,
-    res: Response<Book>,
-    next: NextFunction,
-) => {
-    const bookId = req.query.bookId;
+const getBookById = async (req: Request<{}, {}, {}, { id: string }>, res: Response<Book>, next: NextFunction) => {
+    const bookId = req.query.id;
 
-    const book = await bookService.getBookById(bookId);
+    const book = await bookService.getBookById(parseInt(bookId));
 
     res.send(book);
 };
