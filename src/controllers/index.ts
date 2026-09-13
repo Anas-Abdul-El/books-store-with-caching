@@ -1,4 +1,5 @@
 import authController from "./auth.controller";
+import bookController from "./book.controller";
 import userController from "./user.controller";
 
-export { authController, userController };
+export { authController, bookController, userController };

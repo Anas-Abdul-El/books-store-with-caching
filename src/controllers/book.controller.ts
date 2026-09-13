@@ -24,4 +24,4 @@ const getBookById = async (
     res.send(book);
 };
 
-export { getBookById };
+export default { getBookById };
