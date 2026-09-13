@@ -1,5 +1,5 @@
-import { Router } from "express";
 import { authController } from "../controllers";
+import { Router } from "express";
 import { validatorMiddleware } from "../middlewares";
 import authHandler from "../middlewares/authHandler.middleware";
 import catchAsync from "../utils/catchAsync";

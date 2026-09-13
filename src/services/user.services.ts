@@ -1,8 +1,8 @@
 import type { User } from "../generated/prisma/browser";
 import transporter from "../libs/nodemailer";
 import { connectRedis } from "../libs/redis";
+import { userRepo } from "../repo";
 import { getUserByVerificationToken } from "../repo/auth.repo";
-import { createPasswordResetToken, getUserByItsId, getUsers, updatePassword } from "../repo/user.repo";
 import AppError from "../utils/AppErr";
 import { compareHash, createHash } from "../utils/hash";
 import { verifyToken } from "../utils/token";
@@ -13,7 +13,7 @@ const USER_CACHE_TTL_SECONDS = 60 * 60;
 const sendPasswordResetToken = async (email: string, token: string) => {
     const verificationUrl = `${process.env.FRONTEND_URL}/password-reset?token=${token}`;
 
-    await createPasswordResetToken(email, token);
+    await userRepo.createPasswordResetToken(email, token);
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -46,7 +46,7 @@ const verifyPasswordResetToken = async (newPassword: string, oldPassword: string
     }
 
     const password = await createHash(newPassword);
-    await updatePassword(user.userId, password);
+    await userRepo.updatePassword(user.userId, password);
 };
 
 /**
@@ -83,7 +83,7 @@ const getUserById = async (id: string): Promise<User> => {
         return parsedUser;
     }
 
-    const user = await getUserByItsId(id);
+    const user = await userRepo.getUserByItsId(id);
 
     if (!user) throw new AppError("User not found", 404);
 
@@ -129,7 +129,7 @@ const getAllUsers = async (): Promise<Array<User | null>> => {
         return users.filter(Boolean); // remove null values from the array
     }
 
-    users = await getUsers();
+    users = await userRepo.getUsers();
 
     if (!users) {
         throw new AppError("No users found", 204);

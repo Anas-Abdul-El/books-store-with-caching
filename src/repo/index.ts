@@ -1,4 +1,4 @@
-import * as userRepo from "./auth.repo";
-import * as userRouter from "./user.repo";
+import * as authRepo from "./auth.repo";
+import * as userRepo from "./user.repo";
 
-export { userRepo, userRouter };
+export { authRepo, userRepo };

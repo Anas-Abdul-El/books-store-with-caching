@@ -9,15 +9,7 @@
 
 import type { User } from "../generated/prisma/browser";
 import transporter from "../libs/nodemailer";
-import {
-    createUser,
-    createVerificationCode,
-    deleteToken,
-    getUserByEmail,
-    getUserById,
-    getUserByVerificationToken,
-    updateUserVerificationStatus,
-} from "../repo/auth.repo";
+import { authRepo } from "../repo";
 import AppError from "../utils/AppErr";
 import { compareHash, createHash } from "../utils/hash";
 import { generateToken, verifyToken } from "../utils/token";
@@ -32,7 +24,7 @@ import { type AuthSchemaType, type RegisterSchemaType } from "../validation/auth
 const loginUser = async (data: AuthSchemaType): Promise<Omit<User, "password">> => {
     const { email, password: sentedPass } = data;
 
-    const user = await getUserByEmail(email);
+    const user = await authRepo.getUserByEmail(email);
     if (!user) throw new AppError("Invalid email or password", 401);
 
     const isPasswordValid = await compareHash(sentedPass, user.password);
@@ -56,7 +48,7 @@ const loginUser = async (data: AuthSchemaType): Promise<Omit<User, "password">> 
  * @returns A promise that resolves to the created user's information.
  */
 const registerUser = async (data: RegisterSchemaType): Promise<Omit<User, "password">> => {
-    const isUserExists = await getUserByEmail(data.email);
+    const isUserExists = await authRepo.getUserByEmail(data.email);
 
     console.log(isUserExists);
 
@@ -64,7 +56,7 @@ const registerUser = async (data: RegisterSchemaType): Promise<Omit<User, "passw
 
     const hashedPassword = await createHash(data.password);
 
-    const user = await createUser({ ...data, password: hashedPassword });
+    const user = await authRepo.createUser({ ...data, password: hashedPassword });
 
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
@@ -84,14 +76,14 @@ const refreshAccessToken = async (refreshToken: string) => {
     }
 
     const { userId } = payload;
-    const dbRefreshToken = await getUserById(userId);
+    const dbRefreshToken = await authRepo.getUserById(userId);
     if (!dbRefreshToken) throw new AppError("Invalid or expired token", 400);
 
     const { expiresAt } = dbRefreshToken;
 
     const now = new Date();
     if (expiresAt > now) {
-        await deleteToken(userId);
+        await authRepo.deleteToken(userId);
         throw new AppError("Invalid or expired token", 400);
     }
 
@@ -107,7 +99,7 @@ const refreshAccessToken = async (refreshToken: string) => {
  */
 const logout = async (userId: string) => {
     try {
-        return await deleteToken(userId);
+        return await authRepo.deleteToken(userId);
     } catch (error) {
         throw new AppError("Failed to logout user", 500);
     }
@@ -123,7 +115,7 @@ const logout = async (userId: string) => {
 const sendVerificationEmail = async (email: string, token: string) => {
     const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
 
-    await createVerificationCode(email, token);
+    await authRepo.createVerificationCode(email, token);
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -151,16 +143,16 @@ const verifyEmail = async (token: string) => {
     const isTokenValid = verifyToken(token, "verify");
     if (!isTokenValid) throw new AppError("Invalid Token", 400);
 
-    const user = await getUserByVerificationToken(token);
+    const user = await authRepo.getUserByVerificationToken(token);
     if (!user) throw new AppError("Invalid or expired verification token", 400);
 
     const now = new Date();
     if (user.verificationCodeExpiresAt! > now) {
-        await updateUserVerificationStatus(user.userId, false);
+        await authRepo.updateUserVerificationStatus(user.userId, false);
         throw new AppError("Invalid or expired verification token", 400);
     }
 
-    await updateUserVerificationStatus(user.userId, true);
+    await authRepo.updateUserVerificationStatus(user.userId, true);
 };
 
 export { loginUser, logout, refreshAccessToken, registerUser, sendVerificationEmail, verifyEmail };
