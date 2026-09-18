@@ -11,8 +11,8 @@ import { bookService } from "../services";
  * @param next - The Express next middleware callback (unused).
  * @returns A Promise resolving to the book object.
  */
-const getBookById = async (req: Request<{}, {}, {}, { id: string }>, res: Response<Book>, next: NextFunction) => {
-    const bookId = req.query.id;
+const getBookById = async (req: Request<{ id: string }, {}, {}, {}>, res: Response<Book>, next: NextFunction) => {
+    const bookId = req.params.id;
 
     const book = await bookService.getBookById(parseInt(bookId));
 

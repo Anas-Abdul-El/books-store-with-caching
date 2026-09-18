@@ -1,7 +1,13 @@
 import z from "zod";
 
 const bookSchema = z.object({
-    booKid: z.number(),
+    booKid: z.coerce.number(),
 });
 
-export { bookSchema };
+const booksSchema = z.object({
+    filter: z.string().optional(),
+    sort: z.string().optional(),
+    limit: z.coerce.number().optional(),
+});
+
+export { bookSchema, booksSchema };

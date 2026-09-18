@@ -6,4 +6,8 @@ const getBook = async (bookId: number) => {
     });
 };
 
-export { getBook };
+const getAllBooks = async () => {
+    return await prisma.book.findMany();
+};
+
+export { getAllBooks, getBook };

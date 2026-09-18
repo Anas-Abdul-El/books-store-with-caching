@@ -2,4 +2,10 @@ interface BookRouterRequestQuery {
     id: string;
 }
 
-export { BookRouterRequestQuery };
+interface BookCacheKey {
+    filter: string;
+    sort: string;
+    limit: number;
+}
+
+export type { BookCacheKey, BookRouterRequestQuery };
