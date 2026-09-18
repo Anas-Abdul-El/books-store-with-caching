@@ -5,9 +5,17 @@ const bookSchema = z.object({
 });
 
 const booksSchema = z.object({
-    filter: z.string().optional(),
-    sort: z.string().optional(),
+    filter: z.enum(["price", "author", "category", "releaseDate"]).optional(),
+    filterValue: z.enum([">100", "<100", ">2000", "<2000"]).optional(),
+    sort: z.enum(["price", "releaseDate", "title"]).optional(),
     limit: z.coerce.number().optional(),
+    authorId: z.coerce.number().optional(),
+    catagoryId: z.coerce.number().optional(),
+    sortOrder: z.enum(["asc", "desc"]).optional(),
 });
+
+type BooksSchemaType = z.infer<typeof booksSchema>;
+
+export type { BooksSchemaType };
 
 export { bookSchema, booksSchema };

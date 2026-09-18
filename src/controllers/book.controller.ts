@@ -1,6 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import type { Book } from "../generated/prisma/browser";
 import { bookService } from "../services";
+import { getAllBook } from "../services/book.services";
+import type { BooksSchemaType } from "../validation/book.schema";
 
 /**
  * getBookById fetches a single book by its id and returns it to the caller.
@@ -19,4 +21,16 @@ const getBookById = async (req: Request<{ id: string }, {}, {}, {}>, res: Respon
     res.send(book);
 };
 
-export default { getBookById };
+const getAllbook = async (
+    req: Request<{}, {}, {}, BooksSchemaType>,
+    res: Response<Array<Book>>,
+    next: NextFunction,
+) => {
+    const bookQuery = req.query;
+
+    const books = await getAllBook(bookQuery);
+
+    res.send(books);
+};
+
+export default { getBookById, getAllbook };

@@ -1,7 +1,9 @@
 import type { Book } from "../generated/prisma/browser";
-import { redisClient } from "../libs/redis";
+import { connectRedis, redisClient } from "../libs/redis";
 import { bookRepo } from "../repo";
 import AppError from "../utils/AppErr";
+import createBooksCacheKey from "../utils/bookCacheKey";
+import type { BooksSchemaType } from "../validation/book.schema";
 
 // A cached book stays in Redis for 1.5 hour (60 * 90 seconds) after being cached.
 const BOOK_CACHE_TTL_SECONDS = 60 * 90;
@@ -24,7 +26,7 @@ const BOOK_CACHE_TTL_SECONDS = 60 * 90;
  * @throws {AppError} With a 404 status when the user is not found.
  */
 const getBookById = async (bookId: number): Promise<Book> => {
-    const redis = await redisClient;
+    const redis = await connectRedis();
 
     const bookKey = `book:${bookId}`;
     const cachedBook = await redis.hGet("books", bookKey);
@@ -49,4 +51,22 @@ const getBookById = async (bookId: number): Promise<Book> => {
     return book;
 };
 
-export { getBookById };
+const getAllBook = async (bookQuery: BooksSchemaType): Promise<Array<Book>> => {
+    const redis = await connectRedis();
+
+    const cachedBookKey = createBooksCacheKey(bookQuery);
+
+    const cachedBooks = await redis.get(cachedBookKey);
+
+    if (cachedBooks) return JSON.parse(cachedBooks);
+
+    const books = await bookRepo.getAllBooks(bookQuery);
+
+    if (!books) throw new AppError("Empty", 204);
+
+    await redis.set(cachedBookKey, JSON.stringify(books), { EX: BOOK_CACHE_TTL_SECONDS });
+
+    return books;
+};
+
+export { getAllBook, getBookById };
