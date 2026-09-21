@@ -3,7 +3,7 @@ import { connectRedis, redisClient } from "../libs/redis";
 import { bookRepo } from "../repo";
 import AppError from "../utils/AppErr";
 import createBooksCacheKey from "../utils/bookCacheKey";
-import type { BooksSchemaType } from "../validation/book.schema";
+import type { AddBookSchemaType, BooksSchemaType } from "../validation/book.schema";
 
 // A cached book stays in Redis for 1.5 hour (60 * 90 seconds) after being cached.
 const BOOK_CACHE_TTL_SECONDS = 60 * 90;
@@ -51,6 +51,24 @@ const getBookById = async (bookId: number): Promise<Book> => {
     return book;
 };
 
+/**
+ * getAllBook retrieves all books matching the given query, using a Redis string
+ * key (built from the query via createBooksCacheKey) as a cache in front of the
+ * database so repeated identical requests avoid hitting PostgreSQL.
+ *
+ * Flow:
+ *  1. Ensure the Redis client is connected.
+ *  2. Build a deterministic cache key from the query.
+ *  3. Try to read the cached JSON string (cache hit path).
+ *  4. On a hit, parse the stored JSON string back into books and return it.
+ *  5. On a miss, fetch the books from the DB with bookRepo.getAllBooks.
+ *  6. If no books match the query, throw a 204 AppError.
+ *  7. Otherwise cache the result as a JSON string with a TTL, then return it.
+ *
+ * @param bookQuery - The filter/sort/pagination query used to select the books.
+ * @returns A Promise resolving to the matching books (from cache or database).
+ * @throws {AppError} With a 204 status when no books are found.
+ */
 const getAllBook = async (bookQuery: BooksSchemaType): Promise<Array<Book>> => {
     const redis = await connectRedis();
 
@@ -69,4 +87,18 @@ const getAllBook = async (bookQuery: BooksSchemaType): Promise<Array<Book>> => {
     return books;
 };
 
-export { getAllBook, getBookById };
+/**
+ * addBook creates a new book in the database.
+ *
+ * Flow:
+ *  1. Delegate the insert to the book repository (bookRepo.addBook).
+ *  2. Return the newly created book.
+ *
+ * @param book - The validated book data to insert.
+ * @returns A Promise resolving to the newly created book.
+ */
+const addBook = async (book: AddBookSchemaType): Promise<Book> => {
+    return await bookRepo.addBook(book);
+};
+
+export { addBook, getAllBook, getBookById };
