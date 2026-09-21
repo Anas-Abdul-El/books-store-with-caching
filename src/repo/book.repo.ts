@@ -1,7 +1,7 @@
 import { prisma } from "../libs/prisma";
 import filterFunc from "../utils/bookFilter";
 import orderFunc from "../utils/bookSort";
-import type { BooksSchemaType } from "../validation/book.schema";
+import type { AddBookSchemaType, BooksSchemaType } from "../validation/book.schema";
 
 const getBook = async (bookId: number) => {
     return await prisma.book.findUnique({
@@ -18,4 +18,42 @@ const getAllBooks = async (BookQuery: BooksSchemaType) => {
     });
 };
 
-export { getAllBooks, getBook };
+const addBook = (book: AddBookSchemaType) => {
+    const {
+        author,
+        catagory,
+        description,
+        price,
+        releaseDate,
+        stockCount,
+        title,
+        authorDescription,
+        catagoryDescription,
+    } = book;
+
+    const addedBook = prisma.book.create({
+        data: {
+            title: title,
+            price: price,
+            releaseDate: releaseDate,
+            description: description,
+            stockCount: stockCount,
+            author: {
+                create: {
+                    name: author,
+                    description: authorDescription ?? null,
+                },
+            },
+            category: {
+                create: {
+                    name: catagory,
+                    description: catagoryDescription ?? null,
+                },
+            },
+        },
+    });
+
+    return addedBook;
+};
+
+export { addBook, getAllBooks, getBook };
