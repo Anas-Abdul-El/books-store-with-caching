@@ -28,8 +28,8 @@ const addBookSchema = z.object({
     catagoryDescription: z.string().optional(),
 });
 
-type addBookSchemaType = z.infer<typeof addBookSchema>;
+type AddBookSchemaType = z.infer<typeof addBookSchema>;
 
-export type { addBookSchemaType, BooksSchemaType };
+export type { AddBookSchemaType, BooksSchemaType };
 
 export { addBookSchema, bookSchema, booksSchema };
