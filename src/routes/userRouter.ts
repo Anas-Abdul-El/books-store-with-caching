@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { userController } from "../controllers";
-import { validatorMiddleware } from "../middlewares";
-import authHandler from "../middlewares/authHandler.middleware";
+import { authHandler, validatorMiddleware } from "../middlewares";
 import catchAsync from "../utils/catchAsync";
 import {
     getUserByIdSchema,
@@ -39,4 +38,3 @@ userRouter.post(
 );
 
 export default userRouter;
-

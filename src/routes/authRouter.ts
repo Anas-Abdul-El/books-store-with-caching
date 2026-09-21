@@ -1,7 +1,6 @@
-import { authController } from "../controllers";
 import { Router } from "express";
-import { validatorMiddleware } from "../middlewares";
-import authHandler from "../middlewares/authHandler.middleware";
+import { authController } from "../controllers";
+import { authHandler, validatorMiddleware } from "../middlewares";
 import catchAsync from "../utils/catchAsync";
 import {
     authSchema,

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { bookController } from "../controllers";
-import { validatorMiddleware } from "../middlewares";
+import { authHandler, validatorMiddleware } from "../middlewares";
 import catchAsync from "../utils/catchAsync";
-import { bookSchema, booksSchema } from "../validation/book.schema";
+import { addBookSchema, bookSchema, booksSchema } from "../validation/book.schema";
 
 const bookRouter: Router = Router();
 
@@ -13,7 +13,7 @@ bookRouter.get("/book/:id", validatorMiddleware(bookSchema, "params"), catchAsyn
 bookRouter.get("/books", validatorMiddleware(booksSchema, "query"), catchAsync(bookController.getAllbook));
 
 // add book " /book "
-bookRouter.post("/book", (req, res) => {});
+bookRouter.post("/book", authHandler, validatorMiddleware(addBookSchema, "body"), catchAsync(bookController.addBook));
 
 // update book " /book/:id "
 
