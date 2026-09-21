@@ -16,6 +16,20 @@ const booksSchema = z.object({
 
 type BooksSchemaType = z.infer<typeof booksSchema>;
 
-export type { BooksSchemaType };
+const addBookSchema = z.object({
+    title: z.string(),
+    price: z.coerce.number(),
+    releaseDate: z.coerce.date(),
+    description: z.string(),
+    stockCount: z.coerce.number(),
+    author: z.string(),
+    authorDescription: z.string().optional(),
+    catagory: z.string(),
+    catagoryDescription: z.string().optional(),
+});
 
-export { bookSchema, booksSchema };
+type addBookSchemaType = z.infer<typeof addBookSchema>;
+
+export type { addBookSchemaType, BooksSchemaType };
+
+export { addBookSchema, bookSchema, booksSchema };

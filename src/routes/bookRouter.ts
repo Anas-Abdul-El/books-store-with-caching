@@ -12,7 +12,8 @@ bookRouter.get("/book/:id", validatorMiddleware(bookSchema, "params"), catchAsyn
 // get all books routes with filters and sorting " /books?filter=&sort=&limit= "
 bookRouter.get("/books", validatorMiddleware(booksSchema, "query"), catchAsync(bookController.getAllbook));
 
-// add book " /book/:id "
+// add book " /book "
+bookRouter.post("/book", (req, res) => {});
 
 // update book " /book/:id "
 
