@@ -16,6 +16,7 @@ bookRouter.get("/books", validatorMiddleware(booksSchema, "query"), catchAsync(b
 bookRouter.post("/book", authHandler, validatorMiddleware(addBookSchema, "body"), catchAsync(bookController.addBook));
 
 // update book " /book/:id "
+bookRouter.patch("/book/:id", authHandler);
 
 // delete book " /book/:id "
 

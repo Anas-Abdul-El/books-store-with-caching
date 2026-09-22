@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { coerce } from "zod";
 
 const bookSchema = z.object({
     booKid: z.coerce.number(),
@@ -30,6 +30,25 @@ const addBookSchema = z.object({
 
 type AddBookSchemaType = z.infer<typeof addBookSchema>;
 
-export type { AddBookSchemaType, BooksSchemaType };
+const updateBook = {
+    body: z.object({
+        title: z.string().optional(),
+        price: z.coerce.number().optional(),
+        releaseDate: z.coerce.date().optional(),
+        description: z.string().optional(),
+        stockCount: z.coerce.number().optional(),
+        author: z.string().optional(),
+        authorDescription: z.string().optional(),
+        catagory: z.string().optional(),
+        catagoryDescription: z.string().optional(),
+    }),
+    params: z.object({
+        id: coerce.number(),
+    }),
+};
 
-export { addBookSchema, bookSchema, booksSchema };
+type UpdateBooksBodySchemaType = z.infer<typeof updateBook.body>;
+
+export type { AddBookSchemaType, BooksSchemaType, UpdateBooksBodySchemaType };
+
+export { addBookSchema, bookSchema, booksSchema, updateBook };
