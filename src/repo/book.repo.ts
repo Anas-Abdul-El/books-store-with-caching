@@ -1,3 +1,4 @@
+import type { Book } from "../generated/prisma/browser";
 import { prisma } from "../libs/prisma";
 import filterFunc from "../utils/bookFilter";
 import orderFunc from "../utils/bookSort";
@@ -33,11 +34,11 @@ const addBook = (book: AddBookSchemaType) => {
 
     const addedBook = prisma.book.create({
         data: {
-            title: title,
-            price: price,
-            releaseDate: releaseDate,
-            description: description,
-            stockCount: stockCount,
+            title,
+            price,
+            releaseDate,
+            description,
+            stockCount,
             author: {
                 create: {
                     name: author,
@@ -56,4 +57,13 @@ const addBook = (book: AddBookSchemaType) => {
     return addedBook;
 };
 
-export { addBook, getAllBooks, getBook };
+const updateBook = async (id: number, book: Book) => {
+    return await prisma.book.update({
+        where: {
+            bookId: id,
+        },
+        data: book,
+    });
+};
+
+export { addBook, getAllBooks, getBook, updateBook };
