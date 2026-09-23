@@ -2,7 +2,12 @@ import type { NextFunction, Request, Response } from "express";
 import type { Book } from "../generated/prisma/browser";
 import { bookService } from "../services";
 import { getAllBook } from "../services/book.services";
-import type { AddBookSchemaType, BooksSchemaType } from "../validation/book.schema";
+import type {
+    AddBookSchemaType,
+    BooksSchemaType,
+    UpdateBooksBodySchemaType,
+    UpdateBooksParamsSchemaType,
+} from "../validation/book.schema";
 
 /**
  * getBookById fetches a single book by its id and returns it to the caller.
@@ -39,6 +44,21 @@ const addBook = async (req: Request<{}, {}, AddBookSchemaType, {}>, res: Respons
     const addedBook = await bookService.addBook(bookData);
 
     res.send(addedBook);
+};
+
+const updateBook = async (
+    req: Request<UpdateBooksParamsSchemaType, {}, UpdateBooksBodySchemaType, {}>,
+    res: Response<Book>,
+    next: NextFunction,
+) => {
+    const {
+        body,
+        params: { id },
+    } = req;
+
+    const newBook = await bookService.updateBook(id, body);
+
+    res.send(newBook);
 };
 
 export default { getBookById, getAllbook, addBook };

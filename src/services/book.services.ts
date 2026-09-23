@@ -119,7 +119,7 @@ const updateBook = async (id: number, book: UpdateBooksBodySchemaType): Promise<
 
     if (!bookSelected) throw new AppError("Book not found", 404);
 
-    return {} as Book;
+    return bookRepo.updateBook(id, book);
 };
 
 export { addBook, getAllBook, getBookById, updateBook };

@@ -50,14 +50,6 @@ const addBook = (book: AddBookSchemaType) => {
     return addedBook;
 };
 
-/**
- * updateBook updates an existing book's scalar fields and its related author and
- * category names/descriptions in the database. Author/category fields from the
- * request are mapped onto nested relation updates.
- * @param id - The ID of the book to update.
- * @param book - Partial book data; the author/category keys update the relations.
- * @returns A Promise resolving to the updated book object.
- */
 const updateBook = async (id: number, book: UpdateBooksBodySchemaType) => {
     const { author, catagory, ...bookFields } = book;
     const data: Prisma.BookUpdateInput = removeUndefined(bookFields);

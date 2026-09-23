@@ -45,6 +45,8 @@ const updateBook = {
 
 type UpdateBooksBodySchemaType = z.infer<typeof updateBook.body>;
 
-export type { AddBookSchemaType, BooksSchemaType, UpdateBooksBodySchemaType };
+type UpdateBooksParamsSchemaType = z.infer<typeof updateBook.params>;
+
+export type { AddBookSchemaType, BooksSchemaType, UpdateBooksBodySchemaType, UpdateBooksParamsSchemaType };
 
 export { addBookSchema, bookSchema, booksSchema, updateBook };
