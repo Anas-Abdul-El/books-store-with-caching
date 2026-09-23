@@ -115,10 +115,6 @@ const addBook = async (book: AddBookSchemaType): Promise<Book> => {
  * @throws {AppError} With a 404 status when the book is not found.
  */
 const updateBook = async (id: number, book: UpdateBooksBodySchemaType): Promise<Book> => {
-    const bookSelected = await bookRepo.getBook(id);
-
-    if (!bookSelected) throw new AppError("Book not found", 404);
-
     return bookRepo.updateBook(id, book);
 };
 
