@@ -2,7 +2,7 @@ import { Router } from "express";
 import { bookController } from "../controllers";
 import { authHandler, validatorMiddleware } from "../middlewares";
 import catchAsync from "../utils/catchAsync";
-import { addBookSchema, bookSchema, booksSchema } from "../validation/book.schema";
+import { addBookSchema, bookSchema, booksSchema, updateBook } from "../validation/book.schema";
 
 const bookRouter: Router = Router();
 
@@ -16,7 +16,13 @@ bookRouter.get("/books", validatorMiddleware(booksSchema, "query"), catchAsync(b
 bookRouter.post("/book", authHandler, validatorMiddleware(addBookSchema, "body"), catchAsync(bookController.addBook));
 
 // update book " /book/:id "
-bookRouter.patch("/book/:id", authHandler);
+bookRouter.patch(
+    "/book/:id",
+    authHandler,
+    validatorMiddleware(updateBook.params, "params"),
+    validatorMiddleware(updateBook.body, "body"),
+    catchAsync(bookController.updateBook),
+);
 
 // delete book " /book/:id "
 

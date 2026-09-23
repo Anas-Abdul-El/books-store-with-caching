@@ -61,4 +61,4 @@ const updateBook = async (
     res.send(newBook);
 };
 
-export default { getBookById, getAllbook, addBook };
+export default { getBookById, getAllbook, addBook, updateBook };
