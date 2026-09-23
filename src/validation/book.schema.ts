@@ -23,9 +23,7 @@ const addBookSchema = z.object({
     description: z.string(),
     stockCount: z.coerce.number(),
     author: z.string(),
-    authorDescription: z.string().optional(),
     catagory: z.string(),
-    catagoryDescription: z.string().optional(),
 });
 
 type AddBookSchemaType = z.infer<typeof addBookSchema>;
@@ -38,9 +36,7 @@ const updateBook = {
         description: z.string().optional(),
         stockCount: z.coerce.number().optional(),
         author: z.string().optional(),
-        authorDescription: z.string().optional(),
         catagory: z.string().optional(),
-        catagoryDescription: z.string().optional(),
     }),
     params: z.object({
         id: coerce.number(),
