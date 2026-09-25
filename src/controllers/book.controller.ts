@@ -5,6 +5,7 @@ import { getAllBook } from "../services/book.services";
 import type {
     AddBookSchemaType,
     BooksSchemaType,
+    DeleteBookSchemaType,
     UpdateBooksBodySchemaType,
     UpdateBooksParamsSchemaType,
 } from "../validation/book.schema";
@@ -61,7 +62,11 @@ const updateBook = async (
     res.send(newBook);
 };
 
-const deleteBook = async (req: Request<{}, {}, {}, {}>, res: Response<{}>, next: NextFunction) => {
+const deleteBook = async (
+    req: Request<DeleteBookSchemaType, {}, {}, {}>,
+    res: Response<string>,
+    next: NextFunction,
+) => {
     const id = req.params.id;
 
     await bookService.deleteBook(id);

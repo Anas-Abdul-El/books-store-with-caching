@@ -51,12 +51,12 @@ const deleteBook = z.object({
     id: coerce.number(),
 });
 
-type deleteBookSchemaType = z.infer<typeof deleteBook>;
+type DeleteBookSchemaType = z.infer<typeof deleteBook>;
 
 export type {
     AddBookSchemaType,
     BooksSchemaType,
-    deleteBookSchemaType,
+    DeleteBookSchemaType,
     UpdateBooksBodySchemaType,
     UpdateBooksParamsSchemaType,
 };

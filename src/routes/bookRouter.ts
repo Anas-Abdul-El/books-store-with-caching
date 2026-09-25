@@ -2,7 +2,7 @@ import { Router } from "express";
 import { bookController } from "../controllers";
 import { authHandler, validatorMiddleware } from "../middlewares";
 import catchAsync from "../utils/catchAsync";
-import { addBookSchema, bookSchema, booksSchema, updateBook } from "../validation/book.schema";
+import { addBookSchema, bookSchema, booksSchema, deleteBook, updateBook } from "../validation/book.schema";
 
 const bookRouter: Router = Router();
 
@@ -25,5 +25,11 @@ bookRouter.patch(
 );
 
 // delete book " /book/:id "
+bookRouter.delete(
+    "/book/id",
+    authHandler,
+    validatorMiddleware(deleteBook, "params"),
+    catchAsync(bookController.deleteBook),
+);
 
 export default bookRouter;
