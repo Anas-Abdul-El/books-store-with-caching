@@ -47,6 +47,18 @@ type UpdateBooksBodySchemaType = z.infer<typeof updateBook.body>;
 
 type UpdateBooksParamsSchemaType = z.infer<typeof updateBook.params>;
 
-export type { AddBookSchemaType, BooksSchemaType, UpdateBooksBodySchemaType, UpdateBooksParamsSchemaType };
+const deleteBook = z.object({
+    id: coerce.number(),
+});
 
-export { addBookSchema, bookSchema, booksSchema, updateBook };
+type deleteBookSchemaType = z.infer<typeof deleteBook>;
+
+export type {
+    AddBookSchemaType,
+    BooksSchemaType,
+    deleteBookSchemaType,
+    UpdateBooksBodySchemaType,
+    UpdateBooksParamsSchemaType,
+};
+
+export { addBookSchema, bookSchema, booksSchema, deleteBook, updateBook };
