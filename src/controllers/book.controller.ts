@@ -61,4 +61,12 @@ const updateBook = async (
     res.send(newBook);
 };
 
-export default { getBookById, getAllbook, addBook, updateBook };
+const deleteBook = async (req: Request<{}, {}, {}, {}>, res: Response<{}>, next: NextFunction) => {
+    const id = req.params.id;
+
+    await bookService.deleteBook(id);
+
+    res.send("the book deleted succ");
+};
+
+export default { getBookById, getAllbook, addBook, updateBook, deleteBook };
