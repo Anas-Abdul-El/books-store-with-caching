@@ -72,4 +72,12 @@ const updateBook = async (id: number, book: UpdateBooksBodySchemaType) => {
     });
 };
 
+const deleteBook = async (id: number) => {
+    const book = await prisma.book.findUnique({
+        where: { bookId: id },
+    });
+
+    return book;
+};
+
 export { addBook, getAllBooks, getBook, updateBook };
