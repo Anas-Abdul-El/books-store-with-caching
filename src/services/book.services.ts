@@ -118,4 +118,12 @@ const updateBook = async (id: number, book: UpdateBooksBodySchemaType): Promise<
     return bookRepo.updateBook(id, book);
 };
 
-export { addBook, getAllBook, getBookById, updateBook };
+const deleteBook = async (id: number): Promise<void> => {
+    const book = await bookRepo.getBook(id);
+
+    if (!book) throw new AppError("book not found", 404);
+
+    await bookRepo.deleteBook(id);
+};
+
+export { addBook, deleteBook, getAllBook, getBookById, updateBook };

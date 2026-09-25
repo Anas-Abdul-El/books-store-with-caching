@@ -72,12 +72,10 @@ const updateBook = async (id: number, book: UpdateBooksBodySchemaType) => {
     });
 };
 
-const deleteBook = async (id: number) => {
+const deleteBook = async (id: number): Promise<void> => {
     const book = await prisma.book.findUnique({
         where: { bookId: id },
     });
-
-    return book;
 };
 
-export { addBook, getAllBooks, getBook, updateBook };
+export { addBook, deleteBook, getAllBooks, getBook, updateBook };
