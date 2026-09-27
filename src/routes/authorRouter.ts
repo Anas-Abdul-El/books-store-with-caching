@@ -7,18 +7,14 @@ import { addAuthorSchema, authorSchema, authorsSchema, deleteAuthor, updateAutho
 const authorRouter: Router = Router();
 
 // get author by its id " /author/:id "
-authorRouter.get(
-    "/author/:id",
-    validatorMiddleware(authorSchema, "params"),
-    catchAsync(authorController.getAuthorById),
-);
+authorRouter.get("/:id", validatorMiddleware(authorSchema, "params"), catchAsync(authorController.getAuthorById));
 
 // get all authors routes with sorting and pagination " /authors?sort=&sortOrder=&limit= "
 authorRouter.get("/authors", validatorMiddleware(authorsSchema, "query"), catchAsync(authorController.getAllAuthors));
 
 // add author " /author "
 authorRouter.post(
-    "/author",
+    "/",
     authHandler("private"),
     validatorMiddleware(addAuthorSchema, "body"),
     catchAsync(authorController.addAuthor),
@@ -26,7 +22,7 @@ authorRouter.post(
 
 // update author " /author/:id "
 authorRouter.patch(
-    "/author/:id",
+    "/:id",
     authHandler("private"),
     validatorMiddleware(updateAuthor.params, "params"),
     validatorMiddleware(updateAuthor.body, "body"),
@@ -35,7 +31,7 @@ authorRouter.patch(
 
 // delete author " /author/:id "
 authorRouter.delete(
-    "/author/:id",
+    "/:id",
     authHandler("private"),
     validatorMiddleware(deleteAuthor, "params"),
     catchAsync(authorController.deleteAuthor),

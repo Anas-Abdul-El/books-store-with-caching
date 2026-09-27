@@ -12,7 +12,7 @@ const userRouter: Router = Router();
 
 // get single user route
 userRouter.get(
-    "/user/:id",
+    "/:id",
     authHandler("public"),
     validatorMiddleware(getUserByIdSchema, "params"),
     catchAsync(userController.getUserById),
@@ -23,7 +23,7 @@ userRouter.get("/users", authHandler("private"), catchAsync(userController.getUs
 
 // sendPasswordresetToken route to send a reset password token
 userRouter.post(
-    "/user/sendPasswordresetCode",
+    "/sendPasswordresetCode",
     authHandler("private"),
     validatorMiddleware(sendPasswordResetTokenSchema, "body"),
     catchAsync(userController.sentPasswordResetToken),
@@ -31,7 +31,7 @@ userRouter.post(
 
 // verifyVerificationToken route to verify the email send by the sendPasswordresetCode route
 userRouter.post(
-    "/user/verifyPasswordresetCode",
+    "/verifyPasswordresetCode",
     authHandler("private"),
     validatorMiddleware(verifyPasswordResetTokenSchema, "body"),
     catchAsync(userController.verifyPasswordResetToken),

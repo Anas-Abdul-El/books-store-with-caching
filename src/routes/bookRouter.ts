@@ -7,14 +7,14 @@ import { addBookSchema, bookSchema, booksSchema, deleteBook, updateBook } from "
 const bookRouter: Router = Router();
 
 // get books by its id " /book "
-bookRouter.get("/book/:id", validatorMiddleware(bookSchema, "params"), catchAsync(bookController.getBookById));
+bookRouter.get("/:id", validatorMiddleware(bookSchema, "params"), catchAsync(bookController.getBookById));
 
 // get all books routes with filters and sorting " /books?filter=&sort=&limit= "
-bookRouter.get("/books", validatorMiddleware(booksSchema, "query"), catchAsync(bookController.getAllbook));
+bookRouter.get("/", validatorMiddleware(booksSchema, "query"), catchAsync(bookController.getAllbook));
 
 // add book " /book "
 bookRouter.post(
-    "/book",
+    "/",
     authHandler("private"),
     validatorMiddleware(addBookSchema, "body"),
     catchAsync(bookController.addBook),
@@ -22,7 +22,7 @@ bookRouter.post(
 
 // update book " /book/:id "
 bookRouter.patch(
-    "/book/:id",
+    "/:id",
     authHandler("private"),
     validatorMiddleware(updateBook.params, "params"),
     validatorMiddleware(updateBook.body, "body"),
@@ -31,7 +31,7 @@ bookRouter.patch(
 
 // delete book " /book/:id "
 bookRouter.delete(
-    "/book/id",
+    "/id",
     authHandler("private"),
     validatorMiddleware(deleteBook, "params"),
     catchAsync(bookController.deleteBook),
