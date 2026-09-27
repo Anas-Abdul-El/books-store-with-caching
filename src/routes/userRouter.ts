@@ -13,18 +13,18 @@ const userRouter: Router = Router();
 // get single user route
 userRouter.get(
     "/user/:id",
-    authHandler,
+    authHandler("public"),
     validatorMiddleware(getUserByIdSchema, "params"),
     catchAsync(userController.getUserById),
 );
 
 // get all users route
-userRouter.get("/users", authHandler, catchAsync(userController.getUsers));
+userRouter.get("/users", authHandler("private"), catchAsync(userController.getUsers));
 
 // sendPasswordresetToken route to send a reset password token
 userRouter.post(
     "/user/sendPasswordresetCode",
-    authHandler,
+    authHandler("private"),
     validatorMiddleware(sendPasswordResetTokenSchema, "body"),
     catchAsync(userController.sentPasswordResetToken),
 );
@@ -32,7 +32,7 @@ userRouter.post(
 // verifyVerificationToken route to verify the email send by the sendPasswordresetCode route
 userRouter.post(
     "/user/verifyPasswordresetCode",
-    authHandler,
+    authHandler("private"),
     validatorMiddleware(verifyPasswordResetTokenSchema, "body"),
     catchAsync(userController.verifyPasswordResetToken),
 );

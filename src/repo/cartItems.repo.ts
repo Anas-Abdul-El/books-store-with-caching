@@ -1,6 +1,6 @@
 import { prisma } from "../libs/prisma";
 import cartItemsSortFunc from "../utils/cartItemsSort";
-import type { CartItemsSchemaType } from "../validation/cartItems.schema";
+import type { CartItemsSchemaType, UpdateCartItemsBodySchemaType } from "../validation/cartItems.schema";
 
 /**
  * getAllCartItems fetches every cart item from the database, applying the
@@ -17,4 +17,34 @@ const getAllCartItems = async (query: CartItemsSchemaType) => {
     });
 };
 
-export { getAllCartItems };
+/**
+ * getCartItemByItsId fetches a single cart item with its book, scoped to the
+ * cart of the given user, so a user can never read or change an item that
+ * belongs to somebody else.
+ * @param cartItemId - The id of the cart item to retrieve.
+ * @param userId - The id of the authenticated owner of the cart.
+ * @returns A Promise resolving to the cart item (with its book) or null.
+ */
+const getCartItemByItsId = async (cartItemId: string, userId: string) => {
+    return await prisma.cartItem.findFirst({
+        where: { cartItemId, cart: { userId } },
+        include: { book: true },
+    });
+};
+
+/**
+ * updateCartItem persists the new quantity and unit price of a cart item.
+ * @param cartItemId - The id of the cart item to update.
+ * @param cartItem - The new quantity together with the price re-read from the book.
+ * @returns A Promise resolving to the updated cart item.
+ */
+const updateCartItem = async (cartItemId: string, cartItem: UpdateCartItemsBodySchemaType & { price: number }) => {
+    const { quantity, price } = cartItem;
+
+    return await prisma.cartItem.update({
+        where: { cartItemId },
+        data: { quantity, price },
+    });
+};
+
+export { getAllCartItems, getCartItemByItsId, updateCartItem };

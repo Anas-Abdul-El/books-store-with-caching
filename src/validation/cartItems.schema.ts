@@ -12,6 +12,24 @@ const cartItemsSchema = z.object({
 
 type CartItemsSchemaType = z.infer<typeof cartItemsSchema>;
 
-export type { CartItemsSchemaType };
+/**
+ * updateCartItems holds the schemas used to update a cart item:
+ * the route params (the cart item id) and the body (the new quantity).
+ * The price is never taken from the client, it is re-read from the book.
+ */
+const updateCartItems = {
+    params: z.object({
+        cartItemId: z.uuid(),
+    }),
+    body: z.object({
+        quantity: coerce.number().int().positive(),
+    }),
+};
 
-export { cartItemsSchema };
+type UpdateCartItemsParamsSchemaType = z.infer<typeof updateCartItems.params>;
+
+type UpdateCartItemsBodySchemaType = z.infer<typeof updateCartItems.body>;
+
+export type { CartItemsSchemaType, UpdateCartItemsBodySchemaType, UpdateCartItemsParamsSchemaType };
+
+export { cartItemsSchema, updateCartItems };

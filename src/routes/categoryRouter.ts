@@ -29,7 +29,7 @@ categoryRouter.get(
 // add category " /category "
 categoryRouter.post(
     "/category",
-    authHandler,
+    authHandler("private"),
     validatorMiddleware(addCategorySchema, "body"),
     catchAsync(categoryController.addCategory),
 );
@@ -37,7 +37,7 @@ categoryRouter.post(
 // update category " /category/:id "
 categoryRouter.patch(
     "/category/:id",
-    authHandler,
+    authHandler("private"),
     validatorMiddleware(updateCategory.params, "params"),
     validatorMiddleware(updateCategory.body, "body"),
     catchAsync(categoryController.updateCategory),
@@ -46,7 +46,7 @@ categoryRouter.patch(
 // delete category " /category/:id "
 categoryRouter.delete(
     "/category/:id",
-    authHandler,
+    authHandler("private"),
     validatorMiddleware(deleteCategory, "params"),
     catchAsync(categoryController.deleteCategory),
 );

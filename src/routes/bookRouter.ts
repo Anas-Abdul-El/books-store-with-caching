@@ -13,12 +13,17 @@ bookRouter.get("/book/:id", validatorMiddleware(bookSchema, "params"), catchAsyn
 bookRouter.get("/books", validatorMiddleware(booksSchema, "query"), catchAsync(bookController.getAllbook));
 
 // add book " /book "
-bookRouter.post("/book", authHandler, validatorMiddleware(addBookSchema, "body"), catchAsync(bookController.addBook));
+bookRouter.post(
+    "/book",
+    authHandler("private"),
+    validatorMiddleware(addBookSchema, "body"),
+    catchAsync(bookController.addBook),
+);
 
 // update book " /book/:id "
 bookRouter.patch(
     "/book/:id",
-    authHandler,
+    authHandler("private"),
     validatorMiddleware(updateBook.params, "params"),
     validatorMiddleware(updateBook.body, "body"),
     catchAsync(bookController.updateBook),
@@ -27,7 +32,7 @@ bookRouter.patch(
 // delete book " /book/:id "
 bookRouter.delete(
     "/book/id",
-    authHandler,
+    authHandler("private"),
     validatorMiddleware(deleteBook, "params"),
     catchAsync(bookController.deleteBook),
 );
