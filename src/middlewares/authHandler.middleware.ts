@@ -40,7 +40,7 @@ const authHandler = (privacy: "public" | "private") => (req: Request, res: Respo
     const { role } = payload!;
     if (role === "admin") return next();
 
-    next(new AppError("forbidden routes", 403));
+    return next(new AppError("forbidden routes", 403));
 };
 
 export default authHandler;

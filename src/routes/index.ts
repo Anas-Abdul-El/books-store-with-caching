@@ -2,6 +2,7 @@ import { Router } from "express";
 import authRouter from "./authRouter";
 import authorRouter from "./authorRouter";
 import bookRouter from "./bookRouter";
+import cartItemsRoutes from "./cartItemsRoutes";
 import categoryRouter from "./categoryRouter";
 import userRouter from "./userRouter";
 
@@ -12,5 +13,6 @@ router.use("/user/", userRouter);
 router.use("/book/", bookRouter);
 router.use("/author/", authorRouter);
 router.use("/category/", categoryRouter);
+router.use("/cartItems/", cartItemsRoutes);
 
 export default router;
