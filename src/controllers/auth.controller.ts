@@ -36,8 +36,8 @@ const userLogin = async (
 ) => {
     const user = await authService.loginUser(req.body);
 
-    const accessToken = generateToken({ userId: user.userId }, "access");
-    const refreshToken = generateToken({ userId: user.userId }, "refresh");
+    const accessToken = generateToken({ userId: user.userId, role: user.role }, "access");
+    const refreshToken = generateToken({ userId: user.userId, role: user.role }, "refresh");
 
     await saveSessionToken(user.userId, refreshToken, new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
 

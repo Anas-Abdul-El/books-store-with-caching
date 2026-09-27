@@ -69,6 +69,11 @@ const getUserById = async (userId: string) => {
         },
         select: {
             expiresAt: true,
+            user: {
+                select: {
+                    role: true,
+                },
+            },
         },
     });
 };

@@ -87,7 +87,7 @@ const refreshAccessToken = async (refreshToken: string) => {
         throw new AppError("Invalid or expired token", 400);
     }
 
-    const newAcessToken = generateToken({ userId }, "access");
+    const newAcessToken = generateToken({ userId, role: dbRefreshToken.user.role }, "access");
     return newAcessToken;
 };
 

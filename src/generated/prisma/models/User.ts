@@ -33,6 +33,7 @@ export type UserMinAggregateOutputType = {
   createdAt: Date | null
   isVerified: boolean | null
   isActive: boolean | null
+  role: $Enums.Role | null
   verificationCode: string | null
   resetPasswordCode: string | null
   verificationCodeExpiresAt: Date | null
@@ -48,6 +49,7 @@ export type UserMaxAggregateOutputType = {
   createdAt: Date | null
   isVerified: boolean | null
   isActive: boolean | null
+  role: $Enums.Role | null
   verificationCode: string | null
   resetPasswordCode: string | null
   verificationCodeExpiresAt: Date | null
@@ -63,6 +65,7 @@ export type UserCountAggregateOutputType = {
   createdAt: number
   isVerified: number
   isActive: number
+  role: number
   verificationCode: number
   resetPasswordCode: number
   verificationCodeExpiresAt: number
@@ -80,6 +83,7 @@ export type UserMinAggregateInputType = {
   createdAt?: true
   isVerified?: true
   isActive?: true
+  role?: true
   verificationCode?: true
   resetPasswordCode?: true
   verificationCodeExpiresAt?: true
@@ -95,6 +99,7 @@ export type UserMaxAggregateInputType = {
   createdAt?: true
   isVerified?: true
   isActive?: true
+  role?: true
   verificationCode?: true
   resetPasswordCode?: true
   verificationCodeExpiresAt?: true
@@ -110,6 +115,7 @@ export type UserCountAggregateInputType = {
   createdAt?: true
   isVerified?: true
   isActive?: true
+  role?: true
   verificationCode?: true
   resetPasswordCode?: true
   verificationCodeExpiresAt?: true
@@ -198,6 +204,7 @@ export type UserGroupByOutputType = {
   createdAt: Date
   isVerified: boolean
   isActive: boolean
+  role: $Enums.Role
   verificationCode: string | null
   resetPasswordCode: string | null
   verificationCodeExpiresAt: Date | null
@@ -234,6 +241,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isVerified?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   verificationCode?: Prisma.StringNullableFilter<"User"> | string | null
   resetPasswordCode?: Prisma.StringNullableFilter<"User"> | string | null
   verificationCodeExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -252,6 +260,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCodeExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -273,6 +282,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isVerified?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   verificationCode?: Prisma.StringNullableFilter<"User"> | string | null
   resetPasswordCode?: Prisma.StringNullableFilter<"User"> | string | null
   verificationCodeExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -291,6 +301,7 @@ export type UserOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCodeExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -312,6 +323,7 @@ export type UserScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   isVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   verificationCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   resetPasswordCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   verificationCodeExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -327,6 +339,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   isVerified?: boolean
   isActive?: boolean
+  role?: $Enums.Role
   verificationCode?: string | null
   resetPasswordCode?: string | null
   verificationCodeExpiresAt?: Date | string | null
@@ -345,6 +358,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   isVerified?: boolean
   isActive?: boolean
+  role?: $Enums.Role
   verificationCode?: string | null
   resetPasswordCode?: string | null
   verificationCodeExpiresAt?: Date | string | null
@@ -363,6 +377,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -381,6 +396,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -399,6 +415,7 @@ export type UserCreateManyInput = {
   createdAt?: Date | string
   isVerified?: boolean
   isActive?: boolean
+  role?: $Enums.Role
   verificationCode?: string | null
   resetPasswordCode?: string | null
   verificationCodeExpiresAt?: Date | string | null
@@ -414,6 +431,7 @@ export type UserUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -429,6 +447,7 @@ export type UserUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -444,6 +463,7 @@ export type UserCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrder
   verificationCodeExpiresAt?: Prisma.SortOrder
@@ -459,6 +479,7 @@ export type UserMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrder
   verificationCodeExpiresAt?: Prisma.SortOrder
@@ -474,6 +495,7 @@ export type UserMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   resetPasswordCode?: Prisma.SortOrder
   verificationCodeExpiresAt?: Prisma.SortOrder
@@ -495,6 +517,10 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type EnumRoleFieldUpdateOperationsInput = {
+  set?: $Enums.Role
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -556,6 +582,7 @@ export type UserCreateWithoutSessionInput = {
   createdAt?: Date | string
   isVerified?: boolean
   isActive?: boolean
+  role?: $Enums.Role
   verificationCode?: string | null
   resetPasswordCode?: string | null
   verificationCodeExpiresAt?: Date | string | null
@@ -573,6 +600,7 @@ export type UserUncheckedCreateWithoutSessionInput = {
   createdAt?: Date | string
   isVerified?: boolean
   isActive?: boolean
+  role?: $Enums.Role
   verificationCode?: string | null
   resetPasswordCode?: string | null
   verificationCodeExpiresAt?: Date | string | null
@@ -606,6 +634,7 @@ export type UserUpdateWithoutSessionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -623,6 +652,7 @@ export type UserUncheckedUpdateWithoutSessionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -640,6 +670,7 @@ export type UserCreateWithoutCartInput = {
   createdAt?: Date | string
   isVerified?: boolean
   isActive?: boolean
+  role?: $Enums.Role
   verificationCode?: string | null
   resetPasswordCode?: string | null
   verificationCodeExpiresAt?: Date | string | null
@@ -657,6 +688,7 @@ export type UserUncheckedCreateWithoutCartInput = {
   createdAt?: Date | string
   isVerified?: boolean
   isActive?: boolean
+  role?: $Enums.Role
   verificationCode?: string | null
   resetPasswordCode?: string | null
   verificationCodeExpiresAt?: Date | string | null
@@ -690,6 +722,7 @@ export type UserUpdateWithoutCartInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -707,6 +740,7 @@ export type UserUncheckedUpdateWithoutCartInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -724,6 +758,7 @@ export type UserCreateWithoutOrderInput = {
   createdAt?: Date | string
   isVerified?: boolean
   isActive?: boolean
+  role?: $Enums.Role
   verificationCode?: string | null
   resetPasswordCode?: string | null
   verificationCodeExpiresAt?: Date | string | null
@@ -741,6 +776,7 @@ export type UserUncheckedCreateWithoutOrderInput = {
   createdAt?: Date | string
   isVerified?: boolean
   isActive?: boolean
+  role?: $Enums.Role
   verificationCode?: string | null
   resetPasswordCode?: string | null
   verificationCodeExpiresAt?: Date | string | null
@@ -774,6 +810,7 @@ export type UserUpdateWithoutOrderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -791,6 +828,7 @@ export type UserUncheckedUpdateWithoutOrderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -810,6 +848,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   isVerified?: boolean
   isActive?: boolean
+  role?: boolean
   verificationCode?: boolean
   resetPasswordCode?: boolean
   verificationCodeExpiresAt?: boolean
@@ -828,6 +867,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   isVerified?: boolean
   isActive?: boolean
+  role?: boolean
   verificationCode?: boolean
   resetPasswordCode?: boolean
   verificationCodeExpiresAt?: boolean
@@ -843,6 +883,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   isVerified?: boolean
   isActive?: boolean
+  role?: boolean
   verificationCode?: boolean
   resetPasswordCode?: boolean
   verificationCodeExpiresAt?: boolean
@@ -858,13 +899,14 @@ export type UserSelectScalar = {
   createdAt?: boolean
   isVerified?: boolean
   isActive?: boolean
+  role?: boolean
   verificationCode?: boolean
   resetPasswordCode?: boolean
   verificationCodeExpiresAt?: boolean
   resetPasswordCodeExpiresAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "firstName" | "lastName" | "email" | "password" | "createdAt" | "isVerified" | "isActive" | "verificationCode" | "resetPasswordCode" | "verificationCodeExpiresAt" | "resetPasswordCodeExpiresAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "firstName" | "lastName" | "email" | "password" | "createdAt" | "isVerified" | "isActive" | "role" | "verificationCode" | "resetPasswordCode" | "verificationCodeExpiresAt" | "resetPasswordCodeExpiresAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   session?: boolean | Prisma.User$sessionArgs<ExtArgs>
   cart?: boolean | Prisma.User$cartArgs<ExtArgs>
@@ -889,6 +931,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     isVerified: boolean
     isActive: boolean
+    role: $Enums.Role
     verificationCode: string | null
     resetPasswordCode: string | null
     verificationCodeExpiresAt: Date | null
@@ -1327,6 +1370,7 @@ export interface UserFieldRefs {
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly isVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
+  readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly verificationCode: Prisma.FieldRef<"User", 'String'>
   readonly resetPasswordCode: Prisma.FieldRef<"User", 'String'>
   readonly verificationCodeExpiresAt: Prisma.FieldRef<"User", 'DateTime'>

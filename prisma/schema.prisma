@@ -12,6 +12,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  user
+  admin
+}
+
 model User {
   userId    String @id @default(uuid())
   firstName  String
@@ -21,6 +26,7 @@ model User {
   createdAt DateTime @default(now())
   isVerified Boolean @default(false)
   isActive Boolean @default(true)
+  role Role @default(user)
   verificationCode String?
   resetPasswordCode String?
   verificationCodeExpiresAt DateTime?
