@@ -47,4 +47,15 @@ const updateCartItem = async (cartItemId: string, cartItem: UpdateCartItemsBodyS
     });
 };
 
-export { getAllCartItems, getCartItemByItsId, updateCartItem };
+/**
+ * deleteCartItem removes a cart item from the database by its id.
+ * @param cartItemId - The id of the cart item to delete.
+ * @returns A Promise that resolves once the cart item is deleted.
+ */
+const deleteCartItem = async (cartItemId: string): Promise<void> => {
+    await prisma.cartItem.delete({
+        where: { cartItemId },
+    });
+};
+
+export { deleteCartItem, getAllCartItems, getCartItemByItsId, updateCartItem };

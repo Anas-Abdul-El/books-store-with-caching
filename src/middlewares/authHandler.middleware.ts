@@ -17,27 +17,28 @@ import { verifyToken } from "../utils/token";
  * @returns An Express middleware function that authenticates and authorizes requests.
  */
 const authHandler = (privacy: "public" | "private") => (req: Request, res: Response, next: NextFunction) => {
-    const auth = req.headers.Authorization as string;
-    if (!auth) next(new AppError("login first", 401));
+    // Node lowercases every incoming header name, so the header has to be read as "authorization".
+    const auth = req.headers.authorization;
+    if (!auth) return next(new AppError("login first", 401));
 
     const token = auth.split(" ")[1];
-    if (!token) next(new AppError("token unfound", 400));
+    if (!token) return next(new AppError("token unfound", 400));
 
     let payload;
     try {
-        payload = verifyToken(token!, "access") as {
+        payload = verifyToken(token, "access") as {
             role: "user" | "admin";
             userId: string;
         };
     } catch (error) {
-        next(new AppError("unAuthorized", 401));
+        return next(new AppError("unAuthorized", 401));
     }
 
-    (req as any).userId = payload!.userId;
+    req.userId = payload.userId;
 
     if (privacy === "public") return next();
 
-    const { role } = payload!;
+    const { role } = payload;
     if (role === "admin") return next();
 
     return next(new AppError("forbidden routes", 403));

@@ -2,7 +2,7 @@ import { Router } from "express";
 import authRouter from "./authRouter";
 import authorRouter from "./authorRouter";
 import bookRouter from "./bookRouter";
-import cartItemsRoutes from "./cartItemsRoutes";
+import cartItemsRoutes from "./cartItemsRouter";
 import categoryRouter from "./categoryRouter";
 import userRouter from "./userRouter";
 

@@ -3,6 +3,7 @@ import type { CartItem } from "../generated/prisma/browser";
 import { cartItemsService } from "../services";
 import type {
     CartItemsSchemaType,
+    DeleteCartItemSchemaType,
     UpdateCartItemsBodySchemaType,
     UpdateCartItemsParamsSchemaType,
 } from "../validation/cartItems.schema";
@@ -52,4 +53,28 @@ const updateCartItem = async (
     res.send(updatedCartItem);
 };
 
-export default { getAllCartItems, updateCartItem };
+/**
+ * deleteCartItem deletes a cart item of the logged in user and sends a
+ * confirmation message.
+ * @param req - The Express request; expects the cart item id in the route params
+ * and the user id set by the authHandler.
+ * @param res - The Express response that sends the confirmation message.
+ * @param next - The Express next middleware callback (unused).
+ * @returns A Promise that resolves once the cart item is deleted.
+ */
+const deleteCartItem = async (
+    req: Request<DeleteCartItemSchemaType, {}, {}, {}>,
+    res: Response<string>,
+    next: NextFunction,
+) => {
+    const {
+        userId,
+        params: { cartItemId },
+    } = req;
+
+    await cartItemsService.deleteCartItem(cartItemId, userId);
+
+    res.send("the cart item deleted succ");
+};
+
+export default { deleteCartItem, getAllCartItems, updateCartItem };

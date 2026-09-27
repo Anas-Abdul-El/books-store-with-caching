@@ -2,20 +2,20 @@ import { Router } from "express";
 import { cartItemsController } from "../controllers";
 import { authHandler, validatorMiddleware } from "../middlewares";
 import catchAsync from "../utils/catchAsync";
-import { cartItemsSchema, updateCartItems } from "../validation/cartItems.schema";
+import { cartItemsSchema, deleteCartItem, updateCartItems } from "../validation/cartItems.schema";
 
-const cartItemsRoutes: Router = Router();
+const cartItemsRouter: Router = Router();
 
 // get all cart items routes with sorting and pagination " /cartItems?sort=&sortOrder=&limit= "
-cartItemsRoutes.get(
+cartItemsRouter.get(
     "/",
-    authHandler("public"),
+    authHandler("private"),
     validatorMiddleware(cartItemsSchema, "query"),
     catchAsync(cartItemsController.getAllCartItems),
 );
 
 // update the quantity of a cart item of the logged in user " /cartItems/:cartItemId "
-cartItemsRoutes.patch(
+cartItemsRouter.patch(
     "/:cartItemId",
     authHandler("public"),
     validatorMiddleware(updateCartItems.params, "params"),
@@ -23,4 +23,12 @@ cartItemsRoutes.patch(
     catchAsync(cartItemsController.updateCartItem),
 );
 
-export default cartItemsRoutes;
+// delete a cart item of the logged in user " /cartItems/:cartItemId "
+cartItemsRouter.delete(
+    "/:cartItemId",
+    authHandler("public"),
+    validatorMiddleware(deleteCartItem, "params"),
+    catchAsync(cartItemsController.deleteCartItem),
+);
+
+export default cartItemsRouter;

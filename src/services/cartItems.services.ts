@@ -91,4 +91,32 @@ const updateCartItem = async (
     return updatedCartItem;
 };
 
-export { getAllCartItems, updateCartItem };
+/**
+ * deleteCartItem removes a cart item that belongs to the authenticated user,
+ * then drops the cached cart items list so the next read is served from the
+ * database.
+ *
+ * Flow:
+ *  1. Load the cart item through cartItemsRepo.getCartItemByItsId, scoped to the
+ *     user id set by the authHandler middleware.
+ *  2. If the item does not exist inside that user's cart, throw a 404 AppError,
+ *     so a cart item of another user is indistinguishable from a missing one.
+ *  3. Delete it via cartItemsRepo.deleteCartItem.
+ *  4. Clear every "cartItems:*" Redis key, since the cached list is now stale.
+ *
+ * @param cartItemId - The id of the cart item to delete.
+ * @param userId - The id of the authenticated owner of the cart.
+ * @returns A Promise that resolves once the cart item is deleted.
+ * @throws {AppError} With a 404 status when the item is not in the user's cart.
+ */
+const deleteCartItem = async (cartItemId: string, userId: string): Promise<void> => {
+    const selectedCartItem = await cartItemsRepo.getCartItemByItsId(cartItemId, userId);
+
+    if (!selectedCartItem) throw new AppError("Cart item not found", 404);
+
+    await cartItemsRepo.deleteCartItem(cartItemId);
+
+    await clearCacheByPattern(CART_ITEMS_CACHE_PATTERN);
+};
+
+export { deleteCartItem, getAllCartItems, updateCartItem };

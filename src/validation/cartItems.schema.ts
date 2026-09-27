@@ -30,6 +30,20 @@ type UpdateCartItemsParamsSchemaType = z.infer<typeof updateCartItems.params>;
 
 type UpdateCartItemsBodySchemaType = z.infer<typeof updateCartItems.body>;
 
-export type { CartItemsSchemaType, UpdateCartItemsBodySchemaType, UpdateCartItemsParamsSchemaType };
+/**
+ * deleteCartItem validates the route param used to delete a cart item.
+ */
+const deleteCartItem = z.object({
+    cartItemId: z.uuid(),
+});
 
-export { cartItemsSchema, updateCartItems };
+type DeleteCartItemSchemaType = z.infer<typeof deleteCartItem>;
+
+export type {
+    CartItemsSchemaType,
+    DeleteCartItemSchemaType,
+    UpdateCartItemsBodySchemaType,
+    UpdateCartItemsParamsSchemaType,
+};
+
+export { cartItemsSchema, deleteCartItem, updateCartItems };
