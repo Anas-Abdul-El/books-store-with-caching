@@ -17,4 +17,18 @@ const clearCacheByPattern = async (pattern: string): Promise<void> => {
     await redis.del(keys);
 };
 
+/**
+ * clearCacheByKey drops a single Redis key, used after a write that only
+ * invalidates one entry, e.g. the cart of the user who just changed it.
+ * @param key - The exact Redis key, e.g. "cart:<userId>".
+ * @returns A Promise that resolves once the key is deleted.
+ */
+const clearCacheByKey = async (key: string): Promise<void> => {
+    const redis = await connectRedis();
+
+    await redis.del(key);
+};
+
+export { clearCacheByKey };
+
 export default clearCacheByPattern;

@@ -3,7 +3,8 @@ import { connectRedis } from "../libs/redis";
 import { cartItemsRepo } from "../repo";
 import AppError from "../utils/AppErr";
 import { CART_ITEMS_CACHE_PATTERN, createCartItemsCacheKey } from "../utils/cartItemsCacheKey";
-import clearCacheByPattern from "../utils/clearCache";
+import { createCartCacheKey } from "../utils/cartCacheKey";
+import clearCacheByPattern, { clearCacheByKey } from "../utils/clearCache";
 import type { CartItemsSchemaType, UpdateCartItemsBodySchemaType } from "../validation/cartItems.schema";
 
 // A cached cart item stays in Redis for 1.5 hour (60 * 90 seconds) after being cached.
@@ -58,7 +59,8 @@ const getAllCartItems = async (cartItemQuery: CartItemsSchemaType): Promise<Arra
  *  3. Reject a quantity larger than the stock of the book with a 400 AppError.
  *  4. Persist the new quantity and the price re-read from the book, so the unit
  *     price can never be tampered with by the client.
- *  5. Clear every "cartItems:*" Redis key, since the cached list is now stale.
+ *  5. Clear every "cartItems:*" Redis key and the "cart:<userId>" key of the
+ *     owner, since both cached reads are now stale.
  *  6. Return the updated cart item.
  *
  * @param cartItemId - The id of the cart item to update.
@@ -87,6 +89,7 @@ const updateCartItem = async (
     });
 
     await clearCacheByPattern(CART_ITEMS_CACHE_PATTERN);
+    await clearCacheByKey(createCartCacheKey(userId));
 
     return updatedCartItem;
 };
@@ -102,7 +105,8 @@ const updateCartItem = async (
  *  2. If the item does not exist inside that user's cart, throw a 404 AppError,
  *     so a cart item of another user is indistinguishable from a missing one.
  *  3. Delete it via cartItemsRepo.deleteCartItem.
- *  4. Clear every "cartItems:*" Redis key, since the cached list is now stale.
+ *  4. Clear every "cartItems:*" Redis key and the "cart:<userId>" key of the
+ *     owner, since both cached reads are now stale.
  *
  * @param cartItemId - The id of the cart item to delete.
  * @param userId - The id of the authenticated owner of the cart.
@@ -117,6 +121,7 @@ const deleteCartItem = async (cartItemId: string, userId: string): Promise<void>
     await cartItemsRepo.deleteCartItem(cartItemId);
 
     await clearCacheByPattern(CART_ITEMS_CACHE_PATTERN);
+    await clearCacheByKey(createCartCacheKey(userId));
 };
 
 export { deleteCartItem, getAllCartItems, updateCartItem };
