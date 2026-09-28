@@ -5,7 +5,7 @@ import bookRouter from "./bookRouter";
 import cartItemsRoutes from "./cartItemsRouter";
 import cartRouter from "./cartRouter";
 import categoryRouter from "./categoryRouter";
-import ordersRouter from "./ordersRouter";
+import orderRouter from "./orderRouter";
 import userRouter from "./userRouter";
 
 const router: Router = Router();
@@ -17,6 +17,6 @@ router.use("/author/", authorRouter);
 router.use("/category/", categoryRouter);
 router.use("/cartItems/", cartItemsRoutes);
 router.use("/cart/", cartRouter);
-router.use("/orders/", ordersRouter);
+router.use("/orders/", orderRouter);
 
 export default router;

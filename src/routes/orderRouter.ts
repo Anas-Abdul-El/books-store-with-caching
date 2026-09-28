@@ -2,20 +2,23 @@ import { Router } from "express";
 import { ordersController } from "../controllers";
 import { authHandler, validatorMiddleware } from "../middlewares";
 import catchAsync from "../utils/catchAsync";
-import { deleteOrder, ordersSchema, updateOrder } from "../validation/orders.schema";
+import { addOrderSchema, deleteOrder, ordersSchema, updateOrder } from "../validation/orders.schema";
 
-const ordersRouter: Router = Router();
+const orderRouter: Router = Router();
 
 // get all orders routes with sorting and pagination, admins only " /orders?sort=&sortOrder=&limit= "
-ordersRouter.get(
+orderRouter.get("/", authHandler("private"), validatorMiddleware(ordersSchema, "query"), catchAsync(ordersController.getAllOrders));
+
+// create an order out of the cart of the logged in user " /orders "
+orderRouter.post(
     "/",
-    authHandler("private"),
-    validatorMiddleware(ordersSchema, "query"),
-    catchAsync(ordersController.getAllOrders),
+    authHandler("public"),
+    validatorMiddleware(addOrderSchema, "body"),
+    catchAsync(ordersController.addOrder),
 );
 
 // update the delivery address of an order, admins only " /orders/:orderId "
-ordersRouter.patch(
+orderRouter.patch(
     "/:orderId",
     authHandler("private"),
     validatorMiddleware(updateOrder.params, "params"),
@@ -24,11 +27,11 @@ ordersRouter.patch(
 );
 
 // delete an order with its items, admins only " /orders/:orderId "
-ordersRouter.delete(
+orderRouter.delete(
     "/:orderId",
     authHandler("private"),
     validatorMiddleware(deleteOrder, "params"),
     catchAsync(ordersController.deleteOrder),
 );
 
-export default ordersRouter;
+export default orderRouter;

@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import type { Order } from "../generated/prisma/browser";
 import { ordersService } from "../services";
 import type {
+    AddOrderSchemaType,
     DeleteOrderSchemaType,
     OrdersSchemaType,
     UpdateOrderBodySchemaType,
@@ -27,6 +28,31 @@ const getAllOrders = async (
     const orders = await ordersService.getAllOrders(orderQuery);
 
     res.send(orders);
+};
+
+/**
+ * addOrder places an order for the logged in user out of their own cart and
+ * sends the created order back. The items and the prices are taken from the
+ * cart inside the transaction, the client only chooses the delivery address.
+ * @param req - The Express request; expects the address in the body and the
+ * user id set by the authHandler.
+ * @param res - The Express response typed as {@link Response}<{@link Order}>.
+ * @param next - The Express next middleware callback (unused).
+ * @returns A Promise that resolves once the created order is sent.
+ */
+const addOrder = async (
+    req: Request<{}, {}, AddOrderSchemaType, {}>,
+    res: Response<Order>,
+    next: NextFunction,
+) => {
+    const {
+        userId,
+        body: { address },
+    } = req;
+
+    const addedOrder = await ordersService.addOrder(userId, { address });
+
+    res.status(201).send(addedOrder);
 };
 
 /**
@@ -76,4 +102,4 @@ const deleteOrder = async (
     res.send("the order deleted succ");
 };
 
-export default { deleteOrder, getAllOrders, updateOrder };
+export default { addOrder, deleteOrder, getAllOrders, updateOrder };

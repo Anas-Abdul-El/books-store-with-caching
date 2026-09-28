@@ -13,6 +13,17 @@ const ordersSchema = z.object({
 type OrdersSchemaType = z.infer<typeof ordersSchema>;
 
 /**
+ * addOrderSchema validates the body used to create an order. Only the delivery
+ * address comes from the client: the items, the quantities and the prices are
+ * read from the cart of the logged in user inside the transaction.
+ */
+const addOrderSchema = z.object({
+    address: z.string().min(5),
+});
+
+type AddOrderSchemaType = z.infer<typeof addOrderSchema>;
+
+/**
  * updateOrder holds the schemas used to update an order:
  * the route params (the order id) and the body (the new address).
  * The quantity and the price of an order are derived from its items, so an
@@ -41,10 +52,11 @@ const deleteOrder = z.object({
 type DeleteOrderSchemaType = z.infer<typeof deleteOrder>;
 
 export type {
+    AddOrderSchemaType,
     DeleteOrderSchemaType,
     OrdersSchemaType,
     UpdateOrderBodySchemaType,
     UpdateOrderParamsSchemaType,
 };
 
-export { deleteOrder, ordersSchema, updateOrder };
+export { addOrderSchema, deleteOrder, ordersSchema, updateOrder };

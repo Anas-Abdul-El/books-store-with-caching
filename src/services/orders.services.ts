@@ -2,9 +2,11 @@ import type { Order } from "../generated/prisma/browser";
 import { connectRedis } from "../libs/redis";
 import { ordersRepo } from "../repo";
 import AppError from "../utils/AppErr";
-import clearCacheByPattern from "../utils/clearCache";
+import { createCartCacheKey } from "../utils/cartCacheKey";
+import { CART_ITEMS_CACHE_PATTERN } from "../utils/cartItemsCacheKey";
+import clearCacheByPattern, { clearCacheByKey } from "../utils/clearCache";
 import { ORDERS_CACHE_PATTERN, createOrdersCacheKey } from "../utils/ordersCacheKey";
-import type { OrdersSchemaType, UpdateOrderBodySchemaType } from "../validation/orders.schema";
+import type { AddOrderSchemaType, OrdersSchemaType, UpdateOrderBodySchemaType } from "../validation/orders.schema";
 
 // A cached order stays in Redis for 1.5 hour (60 * 90 seconds) after being cached.
 const ORDERS_CACHE_TTL_SECONDS = 60 * 90;
@@ -103,4 +105,48 @@ const deleteOrder = async (orderId: string): Promise<void> => {
     await clearCacheByPattern(ORDERS_CACHE_PATTERN);
 };
 
-export { deleteOrder, getAllOrders, updateOrder };
+/**
+ * addOrder places an order for the logged in user out of their own cart.
+ * The whole checkout runs in one Prisma transaction, so an order is never
+ * created without its items, the stock is never decremented twice and the cart
+ * is only emptied once the order exists.
+ *
+ * Flow:
+ *  1. Call ordersRepo.createOrder, which re-reads the cart, checks the stock,
+ *     creates the order with its items, decrements the stock and empties the
+ *     cart inside a single transaction.
+ *  2. Translate the failure cases of the repository into AppErrors: 404 when the
+ *     user has no cart, 400 when the cart is empty, and 400 listing the books
+ *     that do not have enough stock.
+ *  3. Drop the cached orders list, the cached cart items and the cached cart of
+ *     the user, since all three changed.
+ *  4. Return the created order.
+ *
+ * @param userId - The id of the authenticated user placing the order.
+ * @param order - The validated body holding the delivery address.
+ * @returns A Promise resolving to the created order.
+ * @throws {AppError} With a 404 status when the user has no cart, or 400 when the cart is empty or the stock is not enough.
+ */
+const addOrder = async (userId: string, order: AddOrderSchemaType): Promise<Order> => {
+    const { address } = order;
+
+    const result = await ordersRepo.createOrder(userId, address);
+
+    if (result.error === "cart_not_found") throw new AppError("Cart not found", 404);
+
+    if (result.error === "empty_cart") throw new AppError("Your cart is empty", 400);
+
+    if (result.error === "out_of_stock")
+        throw new AppError(
+            `Not enough stock for: ${result.outOfStock.map(book => `${book.title} (${book.stockCount} left)`).join(", ")}`,
+            400,
+        );
+
+    await clearCacheByPattern(ORDERS_CACHE_PATTERN);
+    await clearCacheByPattern(CART_ITEMS_CACHE_PATTERN);
+    await clearCacheByKey(createCartCacheKey(userId));
+
+    return result.order;
+};
+
+export { addOrder, deleteOrder, getAllOrders, updateOrder };

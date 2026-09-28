@@ -36,7 +36,7 @@ model User {
 
   cart Cart?
 
-  order Order?
+  orders Order[]
 
   @@index([email, isVerified])
 }
@@ -69,7 +69,7 @@ model Book {
 
   cartItem CartItem?
 
-  OrderItem OrderItem?
+  orderItems OrderItem[]
 
   @@index([title, releaseDate])
 }
@@ -123,10 +123,12 @@ model Order {
   price Float
   address String
 
-  userId String @unique
+  userId String
   user User @relation(references: [userId], fields: [userId], onDelete: Cascade)
 
   orderItems OrderItem[]
+
+  @@index([userId])
 }
 
 model OrderItem {
@@ -137,6 +139,8 @@ model OrderItem {
   orderId String
   order Order @relation(references: [orderId], fields: [orderId])
 
-  bookId Int @unique
+  bookId Int
   book Book @relation(references: [bookId], fields: [bookId])
+
+  @@index([bookId])
 }

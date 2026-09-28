@@ -240,16 +240,16 @@ export type OrderItemOrderByWithRelationInput = {
 
 export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
   OrderItemId?: string
-  bookId?: number
   AND?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   OR?: Prisma.OrderItemWhereInput[]
   NOT?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   quantity?: Prisma.IntFilter<"OrderItem"> | number
   price?: Prisma.FloatFilter<"OrderItem"> | number
   orderId?: Prisma.StringFilter<"OrderItem"> | string
+  bookId?: Prisma.IntFilter<"OrderItem"> | number
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
   book?: Prisma.XOR<Prisma.BookScalarRelationFilter, Prisma.BookWhereInput>
-}, "OrderItemId" | "bookId">
+}, "OrderItemId">
 
 export type OrderItemOrderByWithAggregationInput = {
   OrderItemId?: Prisma.SortOrder
@@ -280,7 +280,7 @@ export type OrderItemCreateInput = {
   quantity: number
   price: number
   order: Prisma.OrderCreateNestedOneWithoutOrderItemsInput
-  book: Prisma.BookCreateNestedOneWithoutOrderItemInput
+  book: Prisma.BookCreateNestedOneWithoutOrderItemsInput
 }
 
 export type OrderItemUncheckedCreateInput = {
@@ -296,7 +296,7 @@ export type OrderItemUpdateInput = {
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   order?: Prisma.OrderUpdateOneRequiredWithoutOrderItemsNestedInput
-  book?: Prisma.BookUpdateOneRequiredWithoutOrderItemNestedInput
+  book?: Prisma.BookUpdateOneRequiredWithoutOrderItemsNestedInput
 }
 
 export type OrderItemUncheckedUpdateInput = {
@@ -327,11 +327,6 @@ export type OrderItemUncheckedUpdateManyInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   bookId?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
-export type OrderItemNullableScalarRelationFilter = {
-  is?: Prisma.OrderItemWhereInput | null
-  isNot?: Prisma.OrderItemWhereInput | null
 }
 
 export type OrderItemListRelationFilter = {
@@ -380,36 +375,46 @@ export type OrderItemSumOrderByAggregateInput = {
   bookId?: Prisma.SortOrder
 }
 
-export type OrderItemCreateNestedOneWithoutBookInput = {
-  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput>
-  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutBookInput
-  connect?: Prisma.OrderItemWhereUniqueInput
+export type OrderItemCreateNestedManyWithoutBookInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput> | Prisma.OrderItemCreateWithoutBookInput[] | Prisma.OrderItemUncheckedCreateWithoutBookInput[]
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutBookInput | Prisma.OrderItemCreateOrConnectWithoutBookInput[]
+  createMany?: Prisma.OrderItemCreateManyBookInputEnvelope
+  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
 }
 
-export type OrderItemUncheckedCreateNestedOneWithoutBookInput = {
-  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput>
-  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutBookInput
-  connect?: Prisma.OrderItemWhereUniqueInput
+export type OrderItemUncheckedCreateNestedManyWithoutBookInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput> | Prisma.OrderItemCreateWithoutBookInput[] | Prisma.OrderItemUncheckedCreateWithoutBookInput[]
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutBookInput | Prisma.OrderItemCreateOrConnectWithoutBookInput[]
+  createMany?: Prisma.OrderItemCreateManyBookInputEnvelope
+  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
 }
 
-export type OrderItemUpdateOneWithoutBookNestedInput = {
-  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput>
-  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutBookInput
-  upsert?: Prisma.OrderItemUpsertWithoutBookInput
-  disconnect?: Prisma.OrderItemWhereInput | boolean
-  delete?: Prisma.OrderItemWhereInput | boolean
-  connect?: Prisma.OrderItemWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderItemUpdateToOneWithWhereWithoutBookInput, Prisma.OrderItemUpdateWithoutBookInput>, Prisma.OrderItemUncheckedUpdateWithoutBookInput>
+export type OrderItemUpdateManyWithoutBookNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput> | Prisma.OrderItemCreateWithoutBookInput[] | Prisma.OrderItemUncheckedCreateWithoutBookInput[]
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutBookInput | Prisma.OrderItemCreateOrConnectWithoutBookInput[]
+  upsert?: Prisma.OrderItemUpsertWithWhereUniqueWithoutBookInput | Prisma.OrderItemUpsertWithWhereUniqueWithoutBookInput[]
+  createMany?: Prisma.OrderItemCreateManyBookInputEnvelope
+  set?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  disconnect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  delete?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  update?: Prisma.OrderItemUpdateWithWhereUniqueWithoutBookInput | Prisma.OrderItemUpdateWithWhereUniqueWithoutBookInput[]
+  updateMany?: Prisma.OrderItemUpdateManyWithWhereWithoutBookInput | Prisma.OrderItemUpdateManyWithWhereWithoutBookInput[]
+  deleteMany?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
 }
 
-export type OrderItemUncheckedUpdateOneWithoutBookNestedInput = {
-  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput>
-  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutBookInput
-  upsert?: Prisma.OrderItemUpsertWithoutBookInput
-  disconnect?: Prisma.OrderItemWhereInput | boolean
-  delete?: Prisma.OrderItemWhereInput | boolean
-  connect?: Prisma.OrderItemWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderItemUpdateToOneWithWhereWithoutBookInput, Prisma.OrderItemUpdateWithoutBookInput>, Prisma.OrderItemUncheckedUpdateWithoutBookInput>
+export type OrderItemUncheckedUpdateManyWithoutBookNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput> | Prisma.OrderItemCreateWithoutBookInput[] | Prisma.OrderItemUncheckedCreateWithoutBookInput[]
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutBookInput | Prisma.OrderItemCreateOrConnectWithoutBookInput[]
+  upsert?: Prisma.OrderItemUpsertWithWhereUniqueWithoutBookInput | Prisma.OrderItemUpsertWithWhereUniqueWithoutBookInput[]
+  createMany?: Prisma.OrderItemCreateManyBookInputEnvelope
+  set?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  disconnect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  delete?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  update?: Prisma.OrderItemUpdateWithWhereUniqueWithoutBookInput | Prisma.OrderItemUpdateWithWhereUniqueWithoutBookInput[]
+  updateMany?: Prisma.OrderItemUpdateManyWithWhereWithoutBookInput | Prisma.OrderItemUpdateManyWithWhereWithoutBookInput[]
+  deleteMany?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
 }
 
 export type OrderItemCreateNestedManyWithoutOrderInput = {
@@ -473,36 +478,43 @@ export type OrderItemCreateOrConnectWithoutBookInput = {
   create: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput>
 }
 
-export type OrderItemUpsertWithoutBookInput = {
-  update: Prisma.XOR<Prisma.OrderItemUpdateWithoutBookInput, Prisma.OrderItemUncheckedUpdateWithoutBookInput>
-  create: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput>
-  where?: Prisma.OrderItemWhereInput
+export type OrderItemCreateManyBookInputEnvelope = {
+  data: Prisma.OrderItemCreateManyBookInput | Prisma.OrderItemCreateManyBookInput[]
+  skipDuplicates?: boolean
 }
 
-export type OrderItemUpdateToOneWithWhereWithoutBookInput = {
-  where?: Prisma.OrderItemWhereInput
+export type OrderItemUpsertWithWhereUniqueWithoutBookInput = {
+  where: Prisma.OrderItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderItemUpdateWithoutBookInput, Prisma.OrderItemUncheckedUpdateWithoutBookInput>
+  create: Prisma.XOR<Prisma.OrderItemCreateWithoutBookInput, Prisma.OrderItemUncheckedCreateWithoutBookInput>
+}
+
+export type OrderItemUpdateWithWhereUniqueWithoutBookInput = {
+  where: Prisma.OrderItemWhereUniqueInput
   data: Prisma.XOR<Prisma.OrderItemUpdateWithoutBookInput, Prisma.OrderItemUncheckedUpdateWithoutBookInput>
 }
 
-export type OrderItemUpdateWithoutBookInput = {
-  OrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  order?: Prisma.OrderUpdateOneRequiredWithoutOrderItemsNestedInput
+export type OrderItemUpdateManyWithWhereWithoutBookInput = {
+  where: Prisma.OrderItemScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderItemUpdateManyMutationInput, Prisma.OrderItemUncheckedUpdateManyWithoutBookInput>
 }
 
-export type OrderItemUncheckedUpdateWithoutBookInput = {
-  OrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+export type OrderItemScalarWhereInput = {
+  AND?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
+  OR?: Prisma.OrderItemScalarWhereInput[]
+  NOT?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
+  OrderItemId?: Prisma.StringFilter<"OrderItem"> | string
+  quantity?: Prisma.IntFilter<"OrderItem"> | number
+  price?: Prisma.FloatFilter<"OrderItem"> | number
+  orderId?: Prisma.StringFilter<"OrderItem"> | string
+  bookId?: Prisma.IntFilter<"OrderItem"> | number
 }
 
 export type OrderItemCreateWithoutOrderInput = {
   OrderItemId?: string
   quantity: number
   price: number
-  book: Prisma.BookCreateNestedOneWithoutOrderItemInput
+  book: Prisma.BookCreateNestedOneWithoutOrderItemsInput
 }
 
 export type OrderItemUncheckedCreateWithoutOrderInput = {
@@ -538,15 +550,32 @@ export type OrderItemUpdateManyWithWhereWithoutOrderInput = {
   data: Prisma.XOR<Prisma.OrderItemUpdateManyMutationInput, Prisma.OrderItemUncheckedUpdateManyWithoutOrderInput>
 }
 
-export type OrderItemScalarWhereInput = {
-  AND?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
-  OR?: Prisma.OrderItemScalarWhereInput[]
-  NOT?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
-  OrderItemId?: Prisma.StringFilter<"OrderItem"> | string
-  quantity?: Prisma.IntFilter<"OrderItem"> | number
-  price?: Prisma.FloatFilter<"OrderItem"> | number
-  orderId?: Prisma.StringFilter<"OrderItem"> | string
-  bookId?: Prisma.IntFilter<"OrderItem"> | number
+export type OrderItemCreateManyBookInput = {
+  OrderItemId?: string
+  quantity: number
+  price: number
+  orderId: string
+}
+
+export type OrderItemUpdateWithoutBookInput = {
+  OrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  order?: Prisma.OrderUpdateOneRequiredWithoutOrderItemsNestedInput
+}
+
+export type OrderItemUncheckedUpdateWithoutBookInput = {
+  OrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type OrderItemUncheckedUpdateManyWithoutBookInput = {
+  OrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type OrderItemCreateManyOrderInput = {
@@ -560,7 +589,7 @@ export type OrderItemUpdateWithoutOrderInput = {
   OrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
-  book?: Prisma.BookUpdateOneRequiredWithoutOrderItemNestedInput
+  book?: Prisma.BookUpdateOneRequiredWithoutOrderItemsNestedInput
 }
 
 export type OrderItemUncheckedUpdateWithoutOrderInput = {
