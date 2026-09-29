@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import AppError from "./AppErr";
 
+// The three kinds of token the API signs. Each kind is signed and verified with
+// its own secret, so a refresh token can never be replayed as an access token.
 type TokenType = "access" | "refresh" | "verify";
 
 /**

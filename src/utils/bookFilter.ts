@@ -8,6 +8,14 @@ interface FilterFuncArgs {
     filterValue: BooksSchemaType["filterValue"];
 }
 
+/**
+ * filterFunc translates the filter query params into a Prisma where clause.
+ * Only the combination matching the requested filter is applied: "price" and
+ * "releaseDate" read filterValue, "author" reads authorId and "category" reads
+ * catagoryId. An unknown or incomplete combination filters nothing.
+ * @param filterQuery - The filter field, its value and the ids it may use.
+ * @returns A Prisma where input, empty when no filter applies.
+ */
 const filterFunc = (filterQuery: FilterFuncArgs): BookWhereInput => {
     switch (filterQuery.filter) {
         case "price":

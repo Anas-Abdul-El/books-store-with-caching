@@ -27,6 +27,15 @@ const getBookById = async (req: Request<{ id: string }, {}, {}, {}>, res: Respon
     res.send(book);
 };
 
+/**
+ * getAllbook fetches all books matching the query (filter, sort and pagination)
+ * and sends them to the client. The listing is served by getAllBook, which
+ * reads Redis first and only queries PostgreSQL on a cache miss.
+ * @param req - The Express request; expects the query params validated by {@link booksSchema}.
+ * @param res - The Express response typed as {@link Response}<Array<{@link Book}>>; sends the matching books to the client.
+ * @param next - The Express next middleware callback (unused).
+ * @returns A Promise that resolves once the books are sent.
+ */
 const getAllbook = async (
     req: Request<{}, {}, {}, BooksSchemaType>,
     res: Response<Array<Book>>,
@@ -39,6 +48,15 @@ const getAllbook = async (
     res.send(books);
 };
 
+/**
+ * addBook creates a new book out of the validated body and sends the created
+ * book back. The author and the category are created together with the book, so
+ * a book always ends up linked to a row of each.
+ * @param req - The Express request; expects the new book data in the body.
+ * @param res - The Express response typed as {@link Response}<{@link Book}>; sends the created book to the client.
+ * @param next - The Express next middleware callback (unused).
+ * @returns A Promise that resolves once the created book is sent.
+ */
 const addBook = async (req: Request<{}, {}, AddBookSchemaType, {}>, res: Response<Book>, next: NextFunction) => {
     const bookData = req.body;
 
@@ -47,6 +65,15 @@ const addBook = async (req: Request<{}, {}, AddBookSchemaType, {}>, res: Respons
     res.send(addedBook);
 };
 
+/**
+ * updateBook updates an existing book and sends the updated book back. Only
+ * the fields present in the body are written, so the ones the client left out
+ * keep their stored value.
+ * @param req - The Express request; expects the book id in the route params and the fields to change in the body.
+ * @param res - The Express response typed as {@link Response}<{@link Book}>; sends the updated book to the client.
+ * @param next - The Express next middleware callback (unused).
+ * @returns A Promise that resolves once the updated book is sent.
+ */
 const updateBook = async (
     req: Request<UpdateBooksParamsSchemaType, {}, UpdateBooksBodySchemaType, {}>,
     res: Response<Book>,
@@ -62,6 +89,14 @@ const updateBook = async (
     res.send(newBook);
 };
 
+/**
+ * deleteBook deletes a book and sends a confirmation message back. The book id
+ * comes from the route params, never from the body.
+ * @param req - The Express request; expects the book id in the route params.
+ * @param res - The Express response that sends the confirmation message.
+ * @param next - The Express next middleware callback (unused).
+ * @returns A Promise that resolves once the book is deleted.
+ */
 const deleteBook = async (
     req: Request<DeleteBookSchemaType, {}, {}, {}>,
     res: Response<string>,

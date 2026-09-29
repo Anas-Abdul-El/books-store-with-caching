@@ -10,6 +10,23 @@ import { verifyToken } from "../utils/token";
 // A cached user stays in Redis for 1 hour (60 * 60 seconds) after being cached.
 const USER_CACHE_TTL_SECONDS = 60 * 60;
 
+/**
+ * sendPasswordResetToken stores the reset token of a user and mails them a link
+ * holding it. The link is built from FRONTEND_URL, so the token travels by mail
+ * and never through the API response.
+ *
+ * Flow:
+ *  1. Build the reset URL pointing at the frontend with the token as a query param.
+ *  2. Persist the token (and its expiry) through userRepo.createPasswordResetToken.
+ *  3. Send the mail through the nodemailer transporter.
+ *  4. On a mail failure, throw a 500 AppError so the caller is not told the
+ *     reset succeeded when no mail left the server.
+ *
+ * @param email - The email of the account asking for a password reset.
+ * @param token - The freshly signed verification token.
+ * @returns A Promise that resolves once the token is stored and the mail is sent.
+ * @throws {AppError} With a 500 status when the mail could not be sent.
+ */
 const sendPasswordResetToken = async (email: string, token: string) => {
     const verificationUrl = `${process.env.FRONTEND_URL}/password-reset?token=${token}`;
 
@@ -30,6 +47,25 @@ const sendPasswordResetToken = async (email: string, token: string) => {
     }
 };
 
+/**
+ * verifyPasswordResetToken checks a password reset request and, when it holds
+ * up, replaces the password of the account with the new hashed one. The token
+ * must be signed with the verification secret, still unexpired, and paired with
+ * the current password of the account, so a stolen mail alone is not enough.
+ *
+ * Flow:
+ *  1. Verify the signature of the token with verifyToken.
+ *  2. Load the user holding that token with getUserByVerificationToken.
+ *  3. Compare the sent old password against the stored hash.
+ *  4. Make sure the reset code has not expired.
+ *  5. Hash the new password and store it through userRepo.updatePassword.
+ *
+ * @param newPassword - The plain new password sent by the client.
+ * @param oldPassword - The current password of the account.
+ * @param token - The verification token the user received by mail.
+ * @returns A Promise that resolves once the new password is stored.
+ * @throws {AppError} With a 400 status when the token, the old password or the expiry do not check out.
+ */
 const verifyPasswordResetToken = async (newPassword: string, oldPassword: string, token: string) => {
     const isTokenValid = verifyToken(token, "verify");
     if (isTokenValid) throw new AppError("invalid or expired token", 400);

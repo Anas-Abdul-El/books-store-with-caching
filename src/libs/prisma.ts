@@ -14,13 +14,20 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
 import { PrismaClient } from "../generated/prisma/client";
 
+// The PostgreSQL connection string, read from the environment at import time.
 const connectionString = `${process.env.DATABASE_URL}`;
 
 /**
- * db is the configured PrismaClient instance for database operations.
- * It uses the PrismaPg adapter to connect to the PostgreSQL database.
+ * adapter is the driver adapter Prisma uses to reach PostgreSQL through the pg
+ * pool instead of its own bundled engine.
  */
 const adapter = new PrismaPg({ connectionString });
+
+/**
+ * prisma is the shared PrismaClient instance every repo talks to. It is created
+ * once per process and reused, so all the queries of the app share a single
+ * connection pool.
+ */
 const prisma = new PrismaClient({ adapter });
 
 export { prisma };

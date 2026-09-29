@@ -50,6 +50,11 @@ const getUserByItsId = async (userId: string) => {
     });
 };
 
+/**
+ * getUsers fetches every user row from the database, with no filter and no
+ * pagination.
+ * @returns A Promise resolving to all the users of the store.
+ */
 const getUsers = async () => {
     return await prisma.user.findMany();
 };

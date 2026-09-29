@@ -5,6 +5,11 @@ interface orderFuncArgs {
     sortOrder: BooksSchemaType["sortOrder"];
 }
 
+/**
+ * orderFunc builds the Prisma orderBy object for the books list query.
+ * @param sortArgs - The requested sort field and direction.
+ * @returns A Prisma orderBy object (defaults to ascending title).
+ */
 const orderFunc = ({ sort = "title", sortOrder = "asc" }: orderFuncArgs) => {
     switch (sort) {
         case "price":

@@ -40,6 +40,8 @@ const saveSessionToken = async (userId: string, token: string, expiresAt: Date) 
     });
 };
 
+// The row createUser writes: the validated registration body, kept as a named
+// type so the repo signature does not repeat the zod inference.
 type RegisteredUser = RegisterSchemaType;
 /**
  * createUser creates a new user in the database with the provided user information.

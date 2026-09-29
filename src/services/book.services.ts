@@ -118,6 +118,19 @@ const updateBook = async (id: number, book: UpdateBooksBodySchemaType): Promise<
     return bookRepo.updateBook(id, book);
 };
 
+/**
+ * deleteBook removes a book from the store once it is known to exist.
+ *
+ * Flow:
+ *  1. Verify the book exists via bookRepo.getBook.
+ *  2. If it does not exist, throw a 404 AppError, so the caller never sees a
+ *     Prisma "record not found" error.
+ *  3. Otherwise delete it via bookRepo.deleteBook.
+ *
+ * @param id - The ID of the book to delete.
+ * @returns A Promise that resolves once the book is deleted.
+ * @throws {AppError} With a 404 status when the book is not found.
+ */
 const deleteBook = async (id: number): Promise<void> => {
     const book = await bookRepo.getBook(id);
 
