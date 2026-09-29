@@ -1,16 +1,16 @@
-import type { OrdersSchemaType } from "../validation/orders.schema";
+import type { OrderSchemaType } from "../validation/order.schema";
 
-interface ordersSortFuncArgs {
-    sort: OrdersSchemaType["sort"];
-    sortOrder: OrdersSchemaType["sortOrder"];
+interface orderSortFuncArgs {
+    sort: OrderSchemaType["sort"];
+    sortOrder: OrderSchemaType["sortOrder"];
 }
 
 /**
- * ordersSortFunc builds the Prisma orderBy object for the orders list query.
+ * orderSortFunc builds the Prisma orderBy object for the orders list query.
  * @param sortArgs - The requested sort field and direction.
  * @returns A Prisma orderBy object (defaults to ascending orderId).
  */
-const ordersSortFunc = ({ sort = "orderId", sortOrder = "asc" }: ordersSortFuncArgs) => {
+const orderSortFunc = ({ sort = "orderId", sortOrder = "asc" }: orderSortFuncArgs) => {
     switch (sort) {
         case "price":
             return {
@@ -31,4 +31,4 @@ const ordersSortFunc = ({ sort = "orderId", sortOrder = "asc" }: ordersSortFuncA
     }
 };
 
-export default ordersSortFunc;
+export default orderSortFunc;

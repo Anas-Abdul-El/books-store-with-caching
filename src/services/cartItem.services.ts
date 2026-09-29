@@ -1,18 +1,18 @@
 import type { CartItem } from "../generated/prisma/browser";
 import { connectRedis } from "../libs/redis";
-import { cartItemsRepo } from "../repo";
+import { cartItemRepo } from "../repo";
 import AppError from "../utils/AppErr";
-import { CART_ITEMS_CACHE_PATTERN, createCartItemsCacheKey } from "../utils/cartItemsCacheKey";
 import { createCartCacheKey } from "../utils/cartCacheKey";
+import { CART_ITEM_CACHE_PATTERN, createCartItemCacheKey } from "../utils/cartItemCacheKey";
 import clearCacheByPattern, { clearCacheByKey } from "../utils/clearCache";
-import type { CartItemsSchemaType, UpdateCartItemsBodySchemaType } from "../validation/cartItems.schema";
+import type { CartItemSchemaType, UpdateCartItemBodySchemaType } from "../validation/cartItem.schema";
 
 // A cached cart item stays in Redis for 1.5 hour (60 * 90 seconds) after being cached.
-const CART_ITEMS_CACHE_TTL_SECONDS = 60 * 90;
+const CART_ITEM_CACHE_TTL_SECONDS = 60 * 90;
 
 /**
  * getAllCartItems retrieves all cart items matching the given query, using a
- * Redis string key (built from the query via createCartItemsCacheKey) as a cache
+ * Redis string key (built from the query via createCartItemCacheKey) as a cache
  * in front of the database so repeated identical requests avoid hitting PostgreSQL.
  *
  * Flow:
@@ -20,7 +20,7 @@ const CART_ITEMS_CACHE_TTL_SECONDS = 60 * 90;
  *  2. Build a deterministic cache key from the query.
  *  3. Try to read the cached JSON string (cache hit path).
  *  4. On a hit, parse the stored JSON string back into cart items and return them.
- *  5. On a miss, fetch the cart items from the DB with cartItemsRepo.getAllCartItems.
+ *  5. On a miss, fetch the cart items from the DB with cartItemRepo.getAllCartItems.
  *  6. If no cart items match the query, throw a 204 AppError.
  *  7. Otherwise cache the result as a JSON string with a TTL, then return it.
  *
@@ -28,20 +28,20 @@ const CART_ITEMS_CACHE_TTL_SECONDS = 60 * 90;
  * @returns A Promise resolving to the matching cart items (from cache or database).
  * @throws {AppError} With a 204 status when no cart items are found.
  */
-const getAllCartItems = async (cartItemQuery: CartItemsSchemaType): Promise<Array<CartItem>> => {
+const getAllCartItems = async (cartItemQuery: CartItemSchemaType): Promise<Array<CartItem>> => {
     const redis = await connectRedis();
 
-    const cachedCartItemsKey = createCartItemsCacheKey(cartItemQuery);
+    const cachedCartItemsKey = createCartItemCacheKey(cartItemQuery);
 
     const cachedCartItems = await redis.get(cachedCartItemsKey);
 
     if (cachedCartItems) return JSON.parse(cachedCartItems);
 
-    const cartItems = await cartItemsRepo.getAllCartItems(cartItemQuery);
+    const cartItems = await cartItemRepo.getAllCartItems(cartItemQuery);
 
     if (!cartItems) throw new AppError("Empty", 204);
 
-    await redis.set(cachedCartItemsKey, JSON.stringify(cartItems), { EX: CART_ITEMS_CACHE_TTL_SECONDS });
+    await redis.set(cachedCartItemsKey, JSON.stringify(cartItems), { EX: CART_ITEM_CACHE_TTL_SECONDS });
 
     return cartItems;
 };
@@ -52,7 +52,7 @@ const getAllCartItems = async (cartItemQuery: CartItemsSchemaType): Promise<Arra
  * served from the database.
  *
  * Flow:
- *  1. Load the cart item with its book through cartItemsRepo.getCartItemByItsId,
+ *  1. Load the cart item with its book through cartItemRepo.getCartItemByItsId,
  *     scoped to the user id set by the authHandler middleware.
  *  2. If the item does not exist inside that user's cart, throw a 404 AppError,
  *     so a cart item of another user is indistinguishable from a missing one.
@@ -72,23 +72,23 @@ const getAllCartItems = async (cartItemQuery: CartItemsSchemaType): Promise<Arra
 const updateCartItem = async (
     cartItemId: string,
     userId: string,
-    cartItem: UpdateCartItemsBodySchemaType,
+    cartItem: UpdateCartItemBodySchemaType,
 ): Promise<CartItem> => {
     const { quantity } = cartItem;
 
-    const selectedCartItem = await cartItemsRepo.getCartItemByItsId(cartItemId, userId);
+    const selectedCartItem = await cartItemRepo.getCartItemByItsId(cartItemId, userId);
 
     if (!selectedCartItem) throw new AppError("Cart item not found", 404);
 
     if (quantity > selectedCartItem.book.stockCount)
         throw new AppError(`Only ${selectedCartItem.book.stockCount} left in stock`, 400);
 
-    const updatedCartItem = await cartItemsRepo.updateCartItem(cartItemId, {
+    const updatedCartItem = await cartItemRepo.updateCartItem(cartItemId, {
         quantity,
         price: selectedCartItem.book.price,
     });
 
-    await clearCacheByPattern(CART_ITEMS_CACHE_PATTERN);
+    await clearCacheByPattern(CART_ITEM_CACHE_PATTERN);
     await clearCacheByKey(createCartCacheKey(userId));
 
     return updatedCartItem;
@@ -100,11 +100,11 @@ const updateCartItem = async (
  * database.
  *
  * Flow:
- *  1. Load the cart item through cartItemsRepo.getCartItemByItsId, scoped to the
+ *  1. Load the cart item through cartItemRepo.getCartItemByItsId, scoped to the
  *     user id set by the authHandler middleware.
  *  2. If the item does not exist inside that user's cart, throw a 404 AppError,
  *     so a cart item of another user is indistinguishable from a missing one.
- *  3. Delete it via cartItemsRepo.deleteCartItem.
+ *  3. Delete it via cartItemRepo.deleteCartItem.
  *  4. Clear every "cartItems:*" Redis key and the "cart:<userId>" key of the
  *     owner, since both cached reads are now stale.
  *
@@ -114,13 +114,13 @@ const updateCartItem = async (
  * @throws {AppError} With a 404 status when the item is not in the user's cart.
  */
 const deleteCartItem = async (cartItemId: string, userId: string): Promise<void> => {
-    const selectedCartItem = await cartItemsRepo.getCartItemByItsId(cartItemId, userId);
+    const selectedCartItem = await cartItemRepo.getCartItemByItsId(cartItemId, userId);
 
     if (!selectedCartItem) throw new AppError("Cart item not found", 404);
 
-    await cartItemsRepo.deleteCartItem(cartItemId);
+    await cartItemRepo.deleteCartItem(cartItemId);
 
-    await clearCacheByPattern(CART_ITEMS_CACHE_PATTERN);
+    await clearCacheByPattern(CART_ITEM_CACHE_PATTERN);
     await clearCacheByKey(createCartCacheKey(userId));
 };
 

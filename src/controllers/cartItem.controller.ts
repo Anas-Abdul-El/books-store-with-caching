@@ -1,12 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
 import type { CartItem } from "../generated/prisma/browser";
-import { cartItemsService } from "../services";
+import { cartItemService } from "../services";
 import type {
-    CartItemsSchemaType,
+    CartItemSchemaType,
     DeleteCartItemSchemaType,
-    UpdateCartItemsBodySchemaType,
-    UpdateCartItemsParamsSchemaType,
-} from "../validation/cartItems.schema";
+    UpdateCartItemBodySchemaType,
+    UpdateCartItemParamsSchemaType,
+} from "../validation/cartItem.schema";
 
 /**
  * getAllCartItems fetches all cart items matching the query (sort/pagination)
@@ -17,13 +17,13 @@ import type {
  * @returns A Promise that resolves once the cart items are sent.
  */
 const getAllCartItems = async (
-    req: Request<{}, {}, {}, CartItemsSchemaType>,
+    req: Request<{}, {}, {}, CartItemSchemaType>,
     res: Response<Array<CartItem>>,
     next: NextFunction,
 ) => {
     const cartItemQuery = req.query;
 
-    const cartItems = await cartItemsService.getAllCartItems(cartItemQuery);
+    const cartItems = await cartItemService.getAllCartItems(cartItemQuery);
 
     res.send(cartItems);
 };
@@ -38,7 +38,7 @@ const getAllCartItems = async (
  * @returns A Promise that resolves once the updated cart item is sent.
  */
 const updateCartItem = async (
-    req: Request<UpdateCartItemsParamsSchemaType, {}, UpdateCartItemsBodySchemaType, {}>,
+    req: Request<UpdateCartItemParamsSchemaType, {}, UpdateCartItemBodySchemaType, {}>,
     res: Response<CartItem>,
     next: NextFunction,
 ) => {
@@ -48,7 +48,7 @@ const updateCartItem = async (
         body: { quantity },
     } = req;
 
-    const updatedCartItem = await cartItemsService.updateCartItem(cartItemId, userId, { quantity });
+    const updatedCartItem = await cartItemService.updateCartItem(cartItemId, userId, { quantity });
 
     res.send(updatedCartItem);
 };
@@ -72,7 +72,7 @@ const deleteCartItem = async (
         params: { cartItemId },
     } = req;
 
-    await cartItemsService.deleteCartItem(cartItemId, userId);
+    await cartItemService.deleteCartItem(cartItemId, userId);
 
     res.send("the cart item deleted succ");
 };

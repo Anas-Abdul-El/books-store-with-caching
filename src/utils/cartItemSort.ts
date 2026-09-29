@@ -1,16 +1,16 @@
-import type { CartItemsSchemaType } from "../validation/cartItems.schema";
+import type { CartItemSchemaType } from "../validation/cartItem.schema";
 
-interface cartItemsSortFuncArgs {
-    sort: CartItemsSchemaType["sort"];
-    sortOrder: CartItemsSchemaType["sortOrder"];
+interface cartItemSortFuncArgs {
+    sort: CartItemSchemaType["sort"];
+    sortOrder: CartItemSchemaType["sortOrder"];
 }
 
 /**
- * cartItemsSortFunc builds the Prisma orderBy object for the cart items list query.
+ * cartItemSortFunc builds the Prisma orderBy object for the cart items list query.
  * @param sortArgs - The requested sort field and direction.
  * @returns A Prisma orderBy object (defaults to ascending cartItemId).
  */
-const cartItemsSortFunc = ({ sort = "cartItemId", sortOrder = "asc" }: cartItemsSortFuncArgs) => {
+const cartItemSortFunc = ({ sort = "cartItemId", sortOrder = "asc" }: cartItemSortFuncArgs) => {
     switch (sort) {
         case "price":
             return {
@@ -31,4 +31,4 @@ const cartItemsSortFunc = ({ sort = "cartItemId", sortOrder = "asc" }: cartItems
     }
 };
 
-export default cartItemsSortFunc;
+export default cartItemSortFunc;

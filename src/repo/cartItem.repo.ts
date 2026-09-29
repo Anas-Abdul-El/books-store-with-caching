@@ -1,6 +1,6 @@
 import { prisma } from "../libs/prisma";
-import cartItemsSortFunc from "../utils/cartItemsSort";
-import type { CartItemsSchemaType, UpdateCartItemsBodySchemaType } from "../validation/cartItems.schema";
+import cartItemSortFunc from "../utils/cartItemSort";
+import type { CartItemSchemaType, UpdateCartItemBodySchemaType } from "../validation/cartItem.schema";
 
 /**
  * getAllCartItems fetches every cart item from the database, applying the
@@ -8,11 +8,11 @@ import type { CartItemsSchemaType, UpdateCartItemsBodySchemaType } from "../vali
  * @param query - The sort/pagination query.
  * @returns A Promise resolving to the matching cart items.
  */
-const getAllCartItems = async (query: CartItemsSchemaType) => {
+const getAllCartItems = async (query: CartItemSchemaType) => {
     const { sort, sortOrder, limit } = query;
 
     return await prisma.cartItem.findMany({
-        orderBy: cartItemsSortFunc({ sort, sortOrder }),
+        orderBy: cartItemSortFunc({ sort, sortOrder }),
         ...(limit !== undefined && { take: limit }),
     });
 };
@@ -38,7 +38,7 @@ const getCartItemByItsId = async (cartItemId: string, userId: string) => {
  * @param cartItem - The new quantity together with the price re-read from the book.
  * @returns A Promise resolving to the updated cart item.
  */
-const updateCartItem = async (cartItemId: string, cartItem: UpdateCartItemsBodySchemaType & { price: number }) => {
+const updateCartItem = async (cartItemId: string, cartItem: UpdateCartItemBodySchemaType & { price: number }) => {
     const { quantity, price } = cartItem;
 
     return await prisma.cartItem.update({

@@ -1,13 +1,13 @@
 import type { NextFunction, Request, Response } from "express";
 import type { Order } from "../generated/prisma/browser";
-import { ordersService } from "../services";
+import { orderService } from "../services";
 import type {
-    AddOrderSchemaType,
+    CreateOrderSchemaType,
     DeleteOrderSchemaType,
-    OrdersSchemaType,
+    OrderSchemaType,
     UpdateOrderBodySchemaType,
     UpdateOrderParamsSchemaType,
-} from "../validation/orders.schema";
+} from "../validation/order.schema";
 
 /**
  * getAllOrders fetches all orders matching the query (sort/pagination) and sends
@@ -19,19 +19,19 @@ import type {
  * @returns A Promise that resolves once the orders are sent.
  */
 const getAllOrders = async (
-    req: Request<{}, {}, {}, OrdersSchemaType>,
+    req: Request<{}, {}, {}, OrderSchemaType>,
     res: Response<Array<Order>>,
     next: NextFunction,
 ) => {
     const orderQuery = req.query;
 
-    const orders = await ordersService.getAllOrders(orderQuery);
+    const orders = await orderService.getAllOrders(orderQuery);
 
     res.send(orders);
 };
 
 /**
- * addOrder places an order for the logged in user out of their own cart and
+ * createOrder places an order for the logged in user out of their own cart and
  * sends the created order back. The items and the prices are taken from the
  * cart inside the transaction, the client only chooses the delivery address.
  * @param req - The Express request; expects the address in the body and the
@@ -40,8 +40,8 @@ const getAllOrders = async (
  * @param next - The Express next middleware callback (unused).
  * @returns A Promise that resolves once the created order is sent.
  */
-const addOrder = async (
-    req: Request<{}, {}, AddOrderSchemaType, {}>,
+const createOrder = async (
+    req: Request<{}, {}, CreateOrderSchemaType, {}>,
     res: Response<Order>,
     next: NextFunction,
 ) => {
@@ -50,9 +50,9 @@ const addOrder = async (
         body: { address },
     } = req;
 
-    const addedOrder = await ordersService.addOrder(userId, { address });
+    const createdOrder = await orderService.createOrder(userId, { address });
 
-    res.status(201).send(addedOrder);
+    res.status(201).send(createdOrder);
 };
 
 /**
@@ -75,7 +75,7 @@ const updateOrder = async (
         body,
     } = req;
 
-    const updatedOrder = await ordersService.updateOrder(orderId, body);
+    const updatedOrder = await orderService.updateOrder(orderId, body);
 
     res.send(updatedOrder);
 };
@@ -97,9 +97,9 @@ const deleteOrder = async (
         params: { orderId },
     } = req;
 
-    await ordersService.deleteOrder(orderId);
+    await orderService.deleteOrder(orderId);
 
     res.send("the order deleted succ");
 };
 
-export default { addOrder, deleteOrder, getAllOrders, updateOrder };
+export default { createOrder, deleteOrder, getAllOrders, updateOrder };

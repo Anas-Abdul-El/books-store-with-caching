@@ -1,19 +1,19 @@
 import type { Order } from "../generated/prisma/browser";
 import { connectRedis } from "../libs/redis";
-import { ordersRepo } from "../repo";
+import { orderRepo } from "../repo";
 import AppError from "../utils/AppErr";
 import { createCartCacheKey } from "../utils/cartCacheKey";
-import { CART_ITEMS_CACHE_PATTERN } from "../utils/cartItemsCacheKey";
+import { CART_ITEM_CACHE_PATTERN } from "../utils/cartItemCacheKey";
 import clearCacheByPattern, { clearCacheByKey } from "../utils/clearCache";
-import { ORDERS_CACHE_PATTERN, createOrdersCacheKey } from "../utils/ordersCacheKey";
-import type { AddOrderSchemaType, OrdersSchemaType, UpdateOrderBodySchemaType } from "../validation/orders.schema";
+import { ORDER_CACHE_PATTERN, createOrderCacheKey } from "../utils/orderCacheKey";
+import type { CreateOrderSchemaType, OrderSchemaType, UpdateOrderBodySchemaType } from "../validation/order.schema";
 
 // A cached order stays in Redis for 1.5 hour (60 * 90 seconds) after being cached.
-const ORDERS_CACHE_TTL_SECONDS = 60 * 90;
+const ORDER_CACHE_TTL_SECONDS = 60 * 90;
 
 /**
  * getAllOrders retrieves all orders matching the given query, using a Redis
- * string key (built from the query via createOrdersCacheKey) as a cache in front
+ * string key (built from the query via createOrderCacheKey) as a cache in front
  * of the database so repeated identical requests avoid hitting PostgreSQL.
  * This listing is private, it is only reachable by an admin through
  * authHandler("private"), and it is never scoped to a single user.
@@ -23,7 +23,7 @@ const ORDERS_CACHE_TTL_SECONDS = 60 * 90;
  *  2. Build a deterministic cache key from the query.
  *  3. Try to read the cached JSON string (cache hit path).
  *  4. On a hit, parse the stored JSON string back into orders and return them.
- *  5. On a miss, fetch the orders from the DB with ordersRepo.getAllOrders.
+ *  5. On a miss, fetch the orders from the DB with orderRepo.getAllOrders.
  *  6. If no orders match the query, throw a 204 AppError.
  *  7. Otherwise cache the result as a JSON string with a TTL, then return it.
  *
@@ -31,20 +31,20 @@ const ORDERS_CACHE_TTL_SECONDS = 60 * 90;
  * @returns A Promise resolving to the matching orders (from cache or database).
  * @throws {AppError} With a 204 status when no orders are found.
  */
-const getAllOrders = async (orderQuery: OrdersSchemaType): Promise<Array<Order>> => {
+const getAllOrders = async (orderQuery: OrderSchemaType): Promise<Array<Order>> => {
     const redis = await connectRedis();
 
-    const cachedOrdersKey = createOrdersCacheKey(orderQuery);
+    const cachedOrdersKey = createOrderCacheKey(orderQuery);
 
     const cachedOrders = await redis.get(cachedOrdersKey);
 
     if (cachedOrders) return JSON.parse(cachedOrders);
 
-    const orders = await ordersRepo.getAllOrders(orderQuery);
+    const orders = await orderRepo.getAllOrders(orderQuery);
 
     if (!orders) throw new AppError("Empty", 204);
 
-    await redis.set(cachedOrdersKey, JSON.stringify(orders), { EX: ORDERS_CACHE_TTL_SECONDS });
+    await redis.set(cachedOrdersKey, JSON.stringify(orders), { EX: ORDER_CACHE_TTL_SECONDS });
 
     return orders;
 };
@@ -56,9 +56,9 @@ const getAllOrders = async (orderQuery: OrdersSchemaType): Promise<Array<Order>>
  * authHandler("private").
  *
  * Flow:
- *  1. Verify the order exists via ordersRepo.getOrderByItsId.
+ *  1. Verify the order exists via orderRepo.getOrderByItsId.
  *  2. If it does not exist, throw a 404 AppError.
- *  3. Otherwise apply the new address via ordersRepo.updateOrder.
+ *  3. Otherwise apply the new address via orderRepo.updateOrder.
  *  4. Clear every "orders:*" Redis key, since the cached list is now stale.
  *  5. Return the updated order.
  *
@@ -68,13 +68,13 @@ const getAllOrders = async (orderQuery: OrdersSchemaType): Promise<Array<Order>>
  * @throws {AppError} With a 404 status when the order is not found.
  */
 const updateOrder = async (orderId: string, order: UpdateOrderBodySchemaType): Promise<Order> => {
-    const selectedOrder = await ordersRepo.getOrderByItsId(orderId);
+    const selectedOrder = await orderRepo.getOrderByItsId(orderId);
 
     if (!selectedOrder) throw new AppError("Order not found", 404);
 
-    const updatedOrder = await ordersRepo.updateOrder(orderId, order);
+    const updatedOrder = await orderRepo.updateOrder(orderId, order);
 
-    await clearCacheByPattern(ORDERS_CACHE_PATTERN);
+    await clearCacheByPattern(ORDER_CACHE_PATTERN);
 
     return updatedOrder;
 };
@@ -86,9 +86,9 @@ const updateOrder = async (orderId: string, order: UpdateOrderBodySchemaType): P
  * authHandler("private").
  *
  * Flow:
- *  1. Verify the order exists via ordersRepo.getOrderByItsId.
+ *  1. Verify the order exists via orderRepo.getOrderByItsId.
  *  2. If it does not exist, throw a 404 AppError.
- *  3. Otherwise delete it, together with its items, via ordersRepo.deleteOrder.
+ *  3. Otherwise delete it, together with its items, via orderRepo.deleteOrder.
  *  4. Clear every "orders:*" Redis key, since the cached list is now stale.
  *
  * @param orderId - The id of the order to delete.
@@ -96,23 +96,23 @@ const updateOrder = async (orderId: string, order: UpdateOrderBodySchemaType): P
  * @throws {AppError} With a 404 status when the order is not found.
  */
 const deleteOrder = async (orderId: string): Promise<void> => {
-    const selectedOrder = await ordersRepo.getOrderByItsId(orderId);
+    const selectedOrder = await orderRepo.getOrderByItsId(orderId);
 
     if (!selectedOrder) throw new AppError("Order not found", 404);
 
-    await ordersRepo.deleteOrder(orderId);
+    await orderRepo.deleteOrder(orderId);
 
-    await clearCacheByPattern(ORDERS_CACHE_PATTERN);
+    await clearCacheByPattern(ORDER_CACHE_PATTERN);
 };
 
 /**
- * addOrder places an order for the logged in user out of their own cart.
+ * createOrder places an order for the logged in user out of their own cart.
  * The whole checkout runs in one Prisma transaction, so an order is never
  * created without its items, the stock is never decremented twice and the cart
  * is only emptied once the order exists.
  *
  * Flow:
- *  1. Call ordersRepo.createOrder, which re-reads the cart, checks the stock,
+ *  1. Call orderRepo.createOrder, which re-reads the cart, checks the stock,
  *     creates the order with its items, decrements the stock and empties the
  *     cart inside a single transaction.
  *  2. Translate the failure cases of the repository into AppErrors: 404 when the
@@ -127,10 +127,10 @@ const deleteOrder = async (orderId: string): Promise<void> => {
  * @returns A Promise resolving to the created order.
  * @throws {AppError} With a 404 status when the user has no cart, or 400 when the cart is empty or the stock is not enough.
  */
-const addOrder = async (userId: string, order: AddOrderSchemaType): Promise<Order> => {
+const createOrder = async (userId: string, order: CreateOrderSchemaType): Promise<Order> => {
     const { address } = order;
 
-    const result = await ordersRepo.createOrder(userId, address);
+    const result = await orderRepo.createOrder(userId, address);
 
     if (result.error === "cart_not_found") throw new AppError("Cart not found", 404);
 
@@ -142,11 +142,11 @@ const addOrder = async (userId: string, order: AddOrderSchemaType): Promise<Orde
             400,
         );
 
-    await clearCacheByPattern(ORDERS_CACHE_PATTERN);
-    await clearCacheByPattern(CART_ITEMS_CACHE_PATTERN);
+    await clearCacheByPattern(ORDER_CACHE_PATTERN);
+    await clearCacheByPattern(CART_ITEM_CACHE_PATTERN);
     await clearCacheByKey(createCartCacheKey(userId));
 
     return result.order;
 };
 
-export { addOrder, deleteOrder, getAllOrders, updateOrder };
+export { createOrder, deleteOrder, getAllOrders, updateOrder };

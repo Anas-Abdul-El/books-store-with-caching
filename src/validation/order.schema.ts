@@ -1,27 +1,27 @@
 import z, { coerce } from "zod";
 
 /**
- * ordersSchema validates the query params used to list orders
+ * orderSchema validates the query params used to list orders
  * (sort field, sort order, and pagination limit).
  */
-const ordersSchema = z.object({
+const orderSchema = z.object({
     sort: z.enum(["price", "quantity", "orderId"]).optional(),
     sortOrder: z.enum(["asc", "desc"]).optional(),
     limit: coerce.number().optional(),
 });
 
-type OrdersSchemaType = z.infer<typeof ordersSchema>;
+type OrderSchemaType = z.infer<typeof orderSchema>;
 
 /**
- * addOrderSchema validates the body used to create an order. Only the delivery
+ * createOrderSchema validates the body used to create an order. Only the delivery
  * address comes from the client: the items, the quantities and the prices are
  * read from the cart of the logged in user inside the transaction.
  */
-const addOrderSchema = z.object({
+const createOrderSchema = z.object({
     address: z.string().min(5),
 });
 
-type AddOrderSchemaType = z.infer<typeof addOrderSchema>;
+type CreateOrderSchemaType = z.infer<typeof createOrderSchema>;
 
 /**
  * updateOrder holds the schemas used to update an order:
@@ -52,11 +52,11 @@ const deleteOrder = z.object({
 type DeleteOrderSchemaType = z.infer<typeof deleteOrder>;
 
 export type {
-    AddOrderSchemaType,
+    CreateOrderSchemaType,
     DeleteOrderSchemaType,
-    OrdersSchemaType,
+    OrderSchemaType,
     UpdateOrderBodySchemaType,
     UpdateOrderParamsSchemaType,
 };
 
-export { addOrderSchema, deleteOrder, ordersSchema, updateOrder };
+export { createOrderSchema, deleteOrder, orderSchema, updateOrder };

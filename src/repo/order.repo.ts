@@ -1,7 +1,7 @@
 import type { Order } from "../generated/prisma/browser";
 import { prisma } from "../libs/prisma";
-import ordersSortFunc from "../utils/ordersSort";
-import type { OrdersSchemaType, UpdateOrderBodySchemaType } from "../validation/orders.schema";
+import orderSortFunc from "../utils/orderSort";
+import type { OrderSchemaType, UpdateOrderBodySchemaType } from "../validation/order.schema";
 
 // The outcome of a checkout attempt: either the created order, or the reason it
 // could not be created. The service turns the error cases into AppErrors, so
@@ -105,11 +105,11 @@ const createOrder = async (userId: string, address: string): Promise<CreateOrder
  * @param query - The sort/pagination query.
  * @returns A Promise resolving to the matching orders.
  */
-const getAllOrders = async (query: OrdersSchemaType) => {
+const getAllOrders = async (query: OrderSchemaType) => {
     const { sort, sortOrder, limit } = query;
 
     return await prisma.order.findMany({
-        orderBy: ordersSortFunc({ sort, sortOrder }),
+        orderBy: orderSortFunc({ sort, sortOrder }),
         ...(limit !== undefined && { take: limit }),
     });
 };
