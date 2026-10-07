@@ -1,11 +1,11 @@
 import type { User } from "../generated/prisma/browser";
-import transporter from "../libs/nodemailer";
 import { connectRedis } from "../libs/redis";
 import { userRepo } from "../repo";
 import { getUserByVerificationToken } from "../repo/auth.repo";
 import AppError from "../utils/AppErr";
 import { compareHash, createHash } from "../utils/hash";
 import { verifyToken } from "../utils/token";
+import { emailQueue } from "../jobs/email.job";
 
 // A cached user stays in Redis for 1 hour (60 * 60 seconds) after being cached.
 const USER_CACHE_TTL_SECONDS = 60 * 60;
@@ -18,9 +18,10 @@ const USER_CACHE_TTL_SECONDS = 60 * 60;
  * Flow:
  *  1. Build the reset URL pointing at the frontend with the token as a query param.
  *  2. Persist the token (and its expiry) through userRepo.createPasswordResetToken.
- *  3. Send the mail through the nodemailer transporter.
- *  4. On a mail failure, throw a 500 AppError so the caller is not told the
- *     reset succeeded when no mail left the server.
+ *  3. Send the mail by pushing a job to the email queue, so the request
+ *     returns immediately and the SMTP call runs in the background.
+ *  4. On a queue failure, throw a 500 AppError so the caller is not told the
+ *     reset succeeded when no mail is on its way.
  *
  * @param email - The email of the account asking for a password reset.
  * @param token - The freshly signed verification token.
@@ -41,7 +42,12 @@ const sendPasswordResetToken = async (email: string, token: string) => {
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        await emailQueue.add("send-password-reset-email", {
+            to: email,
+            subject: mailOptions.subject,
+            html: mailOptions.html,
+            from: mailOptions.from,
+        });
     } catch (error) {
         throw new AppError("Failed to send verification email", 500);
     }

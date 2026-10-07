@@ -8,11 +8,11 @@
  */
 
 import type { User } from "../generated/prisma/browser";
-import transporter from "../libs/nodemailer";
 import { authRepo } from "../repo";
 import AppError from "../utils/AppErr";
 import { compareHash, createHash } from "../utils/hash";
 import { generateToken, verifyToken } from "../utils/token";
+import { emailQueue } from "../jobs/email.job";
 import { type AuthSchemaType, type RegisterSchemaType } from "../validation/auth.schema";
 
 /**
@@ -110,7 +110,7 @@ const logout = async (userId: string) => {
  * It constructs a verification URL using the provided token and sends an email with the verification link.
  * @param email - The email address to send the verification email to.
  * @param token - The verification token to include in the email.
- * @returns A promise that resolves when the email is sent successfully.
+ * @returns A promise that resolves when the email job is queued successfully.
  */
 const sendVerificationEmail = async (email: string, token: string) => {
     const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
@@ -126,7 +126,12 @@ const sendVerificationEmail = async (email: string, token: string) => {
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        await emailQueue.add("send-verification-email", {
+            to: email,
+            subject: mailOptions.subject,
+            html: mailOptions.html,
+            from: mailOptions.from,
+        });
     } catch (error) {
         throw new AppError("Failed to send verification email", 500);
     }
