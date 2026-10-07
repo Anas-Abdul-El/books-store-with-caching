@@ -2,5 +2,6 @@ allowBuilds:
   '@prisma/engines': true
   bcrypt: true
   esbuild: false
+  msgpackr-extract: false
   node-base64: true
   prisma: true
